@@ -8,6 +8,8 @@
   investigation path for an existing vendor-owned mesh.
 - [Vendor datapoints](guides/vendor-datapoints.md) is the living
   reference for readable and writable Sphere-specific functionality.
+- [Local service](guides/local-service.md) documents the daemon, API,
+  client, installation, and operational checks.
 
 ## Analysis
 
@@ -17,11 +19,15 @@
   the original Sphere and other relevant devices.
 - [Provisioning](analysis/provisioning.md) summarizes Bluetooth Mesh key
   establishment and the available provisioning strategies.
+- [Step 6 operational validation](analysis/step6-operational-validation.md)
+  records the final API, lifecycle, and live read-only checks.
 
 ## Plans
 
 - [Daemon plan](plans/daemon.md) is the staged roadmap for a persistent
   Linux control service.
+- [Desktop GUI plan](plans/desktop-gui.md) defines the proposed
+  phone-inspired desktop client without implementing it.
 
 ## Research
 
