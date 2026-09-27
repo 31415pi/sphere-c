@@ -129,6 +129,16 @@ c9 d0 07 01 02 04 01 66 04 NN
 The product's visible picker omits some values that remain in the
 schema, so schema membership alone does not prove firmware support.
 
+The local service now exposes a named effect catalog and a guarded
+selection command. `sphere-meshctl effect get` reads the vendor
+snapshot. `effect select colour_2` (also `effect set colour_2`) writes
+DP 102 alone; `effect activate colour_2` first writes DP 2=`colour`
+and then DP 102, matching the individual-device panel order. Only
+visible picker names are writable. Each write expects DATA and is
+sent once, without automatic retries. An empty DATA acknowledgment
+counts as a transport acknowledgment, not proof of a visible change.
+No live write has yet validated the derived bytes.
+
 ### Music mode
 
 The UI sets DP 2 to `music` and continuously streams DP 8. The APK

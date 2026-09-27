@@ -29,6 +29,10 @@ In another terminal, inspect health and read states:
 ./bin/sphere-meshctl lighting temperature
 ./bin/sphere-meshctl lighting hsl
 ./bin/sphere-meshctl vendor-read 2 102
+./bin/sphere-meshctl effect list
+./bin/sphere-meshctl effect get
+./bin/sphere-meshctl effect select colour_2
+./bin/sphere-meshctl effect activate colour_2
 ```
 
 The lighting Set syntax matches the direct harness:
@@ -61,6 +65,10 @@ Successful responses contain `ok: true` and `result`. Failures contain
 | `control` | `{"command":"read|on|off|toggle"}` |
 | `lighting` | `{"command":"lightness|temperature|hsl|xyl..."}` |
 | `vendor.read` | `{"dp_ids":[2,102]}` |
+| `effect.list` | `{}` |
+| `effect.get` | `{}` |
+| `effect.set` or `effect.select` | `{"name":"colour_2"}` |
+| `effect.activate` | `{"name":"colour_2"}` |
 
 Lighting commands use the same optional `=value` suffix documented in
 the README. `vendor.read` sends only the Tuya/Olight DP Read opcode and
@@ -69,6 +77,19 @@ Sphere. The response also identifies requested IDs omitted by the
 device. Requests are limited to 64 KiB. Mutating and read commands
 are serialized through the live Mesh session because access responses
 have no correlation identifier beyond source and opcode.
+
+`effect.list` includes all 32 schema effects with their saved English
+labels and marks the 26 shown in the panel. `effect.get` reads DPs 2
+and 102 and reports the current effect when DP 102 is returned. A
+missing DP 2 is normal in the observed snapshot. `effect.set` and
+`effect.select` are synonyms: they write DP 102 alone, preserving the
+current work mode. `effect.activate` writes DP 2 (`colour`) and then
+DP 102 in separate acknowledged requests, stopping if either fails.
+Only visible picker names are accepted for writes. Write responses
+may contain only an empty DATA acknowledgment, which confirms receipt
+but not the resulting appearance. No automatic retransmission is used
+for writes. These effect bytes are derived from the saved app and
+remain unvalidated by a live Sphere write.
 
 The service socket is mode `0600`. If its path is occupied by a regular
 file, the daemon refuses to replace it. A stale socket left by a crash

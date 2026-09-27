@@ -89,6 +89,8 @@ Run the persistent local service and use its separate client:
 ./bin/sphere-meshctl health
 ./bin/sphere-meshctl control read
 ./bin/sphere-meshctl vendor-read 2 102
+./bin/sphere-meshctl effect list
+./bin/sphere-meshctl effect get
 ```
 
 The daemon owns the state file and Bluetooth connection exclusively,
@@ -100,6 +102,16 @@ protocol and systemd user-service setup.
 The vendor read shown above queries work mode and color mode without
 changing either one. Its result includes decoded enum values and raw
 bytes for continued protocol research.
+
+To choose a built-in effect by its schema name, use
+`effect select colour_2` (or `effect set colour_2`). This sends only
+DP 102 and leaves the current work mode as reported by the device.
+`effect activate colour_2` first sets DP 2 to colour mode, then selects
+DP 102. Both operations require a DATA acknowledgment for each write;
+the response may be an empty acknowledgment, so it does not by itself
+prove that the light visibly changed. Only effects shown in the saved
+Sphere panel are accepted. The wire bytes are derived from the saved
+app and have not been validated by a live Sphere write.
 
 Read the standard lighting states without changing the output:
 
