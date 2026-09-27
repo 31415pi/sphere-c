@@ -64,8 +64,10 @@ standard Bluetooth Mesh lighting models.
 The first Stage 6 slice implements the Tuya/Olight datapoint framing
 used by vendor server `0x07d0:0x0004`, including strict typed response
 parsing. A read-only service operation can query selected datapoints
-without changing the lamp. Effect writes remain deliberately disabled
-until a separately reviewed, reversible write experiment is approved.
+without changing the lamp. Guarded named effect operations permit only
+visible DP 102 values; an explicit activation operation writes DP 2 and
+DP 102 sequentially. Writes are acknowledged and never retried
+automatically.
 
 Live reads confirmed the grammar and exposed a two-part response: a
 short empty DATA acknowledgment followed by a segmented status
@@ -74,6 +76,12 @@ same records for DPs 7, 101, 102, 103, and 104. DP 102 was enum 7
 (`colour_7`); DP 2 was omitted. This indicates that the firmware treats
 the requested-ID list as a status-refresh trigger rather than a strict
 projection, or that DP 2 is not readable in the current state.
+
+A reversible live experiment validated DP 102 writes. Color Wheel (`7`)
+was acknowledged, Aurora (`2`) was selected and independently read
+back, and Color Wheel was restored and read back. Power remained on.
+No one observed the lamp during the test, so visible appearance and the
+still-unused DP 2 activation path remain unconfirmed.
 
 ## Current status
 

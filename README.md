@@ -110,8 +110,9 @@ DP 102 and leaves the current work mode as reported by the device.
 DP 102. Both operations require a DATA acknowledgment for each write;
 the response may be an empty acknowledgment, so it does not by itself
 prove that the light visibly changed. Only effects shown in the saved
-Sphere panel are accepted. The wire bytes are derived from the saved
-app and have not been validated by a live Sphere write.
+Sphere panel are accepted. A live DP 102 experiment successfully
+selected Aurora, read it back, and restored Color Wheel. Visual output
+was not observed during that unattended experiment.
 
 Read the standard lighting states without changing the output:
 

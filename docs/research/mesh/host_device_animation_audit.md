@@ -383,12 +383,13 @@ asking the lamp firmware to run a DP 102 built-in effect.
 3. The panel's music mode sets DP 2 to `music` and streams DP 8.
 4. The vendor server and opcode family are `0x07d0:0x0004` and
    `c9/ca/cc/cd d0 07`.
-5. The current host controller does not implement those vendor DPs.
-6. No saved decrypted runtime capture validates an effect write.
+5. The host controller implements guarded DP 102 effect selection.
+6. A later live experiment validated DP 102 selection, readback, and
+   restoration; visible appearance and DP 2 activation remain untested.
 
-### Derived / strong, awaiting a capture
+### Derived / strong
 
-1. A combined acknowledged effect selection encodes as
+1. A combined acknowledged effect activation encodes as
    `c9 d0 07 01 02 04 01 66 04 NN`.
 2. A four-byte compressed music update has parameters
    `01 08 00 04 XX XX XX XX`.

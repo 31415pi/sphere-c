@@ -17,9 +17,10 @@ mini-app. Executable code reversed from the Olight APK establishes the
 wire codec and routing behavior. Authenticated queries against the
 locally owned Sphere establish the smaller live-read set.
 
-No vendor-DP write has yet been sent by this project. Write encodings
-below are derived from product-specific UI call sites and the APK
-encoder, not claimed as live-confirmed behavior.
+DP 102 selection has been written and restored on the locally owned
+Sphere. Other write encodings below remain derived from
+product-specific UI call sites and the APK encoder rather than
+live-confirmed behavior.
 
 Use these evidence labels when updating this page:
 
@@ -137,7 +138,11 @@ and then DP 102, matching the individual-device panel order. Only
 visible picker names are writable. Each write expects DATA and is
 sent once, without automatic retries. An empty DATA acknowledgment
 counts as a transport acknowledgment, not proof of a visible change.
-No live write has yet validated the derived bytes.
+DP 102 writes are live-validated. A same-value write of Color Wheel
+(`07`) was acknowledged, Aurora (`02`) was selected and read back, and
+Color Wheel was restored and read back. DP 2 activation has not been
+written, and no one observed the lamp during the unattended test, so
+the visible animation change remains unconfirmed.
 
 ### Music mode
 

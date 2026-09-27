@@ -1,11 +1,10 @@
-# Sphere C effect-write experiment plan
+# Sphere C effect-write experiment
 
 ## Evidence boundary
 
-No vendor WRITE has been sent by this project. Product UI behavior and
-the APK codec below are **derived/static evidence**; the current values
-and earlier query behavior are **live read evidence**. The proposed
-write is a plan, not a live result.
+This document began as the experiment plan. The DP 102-only sequence
+was completed on 2026-09-27; its result is recorded below. Product UI
+behavior and untested DP 2 encoding remain **derived/static evidence**.
 
 ## DP 102 values
 
@@ -106,6 +105,45 @@ cannot guarantee restoration of the prior mode. Record the mode change
 as a reversibility limitation; do not claim the whole pre-test state
 was restored. Stop on timeout, unexpected status, or unexpected lamp
 behavior, and do not retry an acknowledged write blindly.
+
+## Live result
+
+The experiment used the locally provisioned primary element at
+`0x0118`. Initial state was powered on, and a read returned DP 102=`07`
+(Color Wheel). DP 2 remained absent. No DP 2 write was sent.
+
+The following acknowledged access payloads were sent once each, with
+automatic retries disabled:
+
+```text
+# same-value probe
+c9 d0 07 01 66 04 07
+
+# select Aurora
+c9 d0 07 01 66 04 02
+
+# restore Color Wheel
+c9 d0 07 01 66 04 07
+```
+
+Each write received a DATA echo containing the written record:
+
+```text
+cd d0 07 01 66 04 07
+cd d0 07 01 66 04 02
+cd d0 07 01 66 04 07
+```
+
+Separate READ transactions confirmed DP 102 values `07`, then `02`,
+then restored `07`. The initial and final Generic OnOff state was on.
+No person was present to observe the lamp, so this proves write
+acceptance, state change, readback, and restoration but does not prove
+that the visible animation changed to the expected appearance.
+
+This live result validates the derived plain DP 102 WRITE grammar and
+shows that a successful write response echoes DP 102 directly. It does
+not validate DP 2=`colour`, `effect activate`, hidden effects, or
+power-cycle persistence.
 
 ## Sources
 

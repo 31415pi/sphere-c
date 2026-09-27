@@ -89,7 +89,9 @@ Only visible picker names are accepted for writes. Write responses
 may contain only an empty DATA acknowledgment, which confirms receipt
 but not the resulting appearance. No automatic retransmission is used
 for writes. These effect bytes are derived from the saved app and
-remain unvalidated by a live Sphere write.
+are now validated for DP 102: a live experiment selected Aurora,
+read it back, and restored Color Wheel. The DP 2 activation write and
+the corresponding visible output remain untested.
 
 The service socket is mode `0600`. If its path is occupied by a regular
 file, the daemon refuses to replace it. A stale socket left by a crash

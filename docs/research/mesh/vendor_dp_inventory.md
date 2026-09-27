@@ -18,8 +18,8 @@ of evidence that must not be treated as interchangeable:
 "Read evidence" means evidence that a value was actually reported, or
 weaker evidence that a schema permits reading. "Write evidence" means a
 product call site or observed transaction, not merely `mode: "rw"`.
-No saved capture contains a decoded runtime DP write. Consequently, no
-Sphere DP write is live-confirmed.
+DP 102 now has a live acknowledged write, separate readback, and
+restoration. Other Sphere DP writes are not live-confirmed.
 
 The product schema is embedded in the one-line mini-app bundle [S1]. It
 contains 17 entries. DP 4 is retained below as a separately identified
@@ -64,7 +64,7 @@ that the mini-app property's Tuya type appeared on the vendor model.
 | 37 | `rtc_timer` | raw (`00`), max 128 | **MINI:** `rw` only; no live record. | Schema capability only; no saved write call or transaction. | Opaque, `0..128` bytes | Local/RTC timer configuration, based on schema label only | High schema presence; low payload semantics | [S1] |
 | 38 | `timer_report` | raw (`00`), max 128 | **MINI:** `rw` only; no live record. | Schema capability only; no saved write call or transaction. | Opaque, `0..128` bytes | Timer-state report, based on schema label only | High schema presence; low access direction/payload semantics | [S1] |
 | 101 | `countdown_2` | value; vendor `02` **live-confirmed** | **LIVE:** returned `65 02 00000000` (0). **MINI:** panel consumes it. | **MINI:** countdown dialog calls `countdown_2.set(seconds)`. No live write. | `0..43200` seconds, step 1; 4-byte big-endian integer on live wire | Countdown to toggle/off; this is the countdown DP actually used by the saved panel | Very high type/read/range and product write call; no live write | [S1] [S3] |
-| 102 | `colour_mode` | enum; vendor `04` **live-confirmed** | **LIVE:** returned `66 04 07`, meaning `colour_7`. | **MINI:** effect picker writes this after DP 2=`colour`; APK encoder derives `66 04 NN`. No live write. | `00=flame`; `01..1f=colour_1..colour_31`. The visible picker omits some schema values. | Selects a built-in firmware effect; it is not DP 6 scene data and not an LED index | Very high live type/value and product semantics; no live write | [S1] [S2] [S3] [S5] |
+| 102 | `colour_mode` | enum; vendor `04` **live-confirmed** | **LIVE:** returned `66 04 07`, meaning `colour_7`. | **LIVE:** `07`, change to `02`, and restoration to `07` were acknowledged with exact DATA echoes and independently read back. **MINI:** effect picker writes this after DP 2=`colour`. | `00=flame`; `01..1f=colour_1..colour_31`. The visible picker omits some schema values. | Selects a built-in firmware effect; it is not DP 6 scene data and not an LED index | Very high live wire encoding, state change, restoration, and product semantics; visible appearance unobserved | [S1] [S2] [S3] [S5] [S8] |
 | 103 | `battery_percentage` | value; vendor `02` **live-confirmed** | **LIVE:** returned `67 02 00000064` (100). **MINI:** read-only and displayed by panel. | Schema is `ro`; no write evidence. | `0..100%`, step 1; live four-byte big-endian value | Battery state of charge | Very high live and schema evidence | [S1] [S3] |
 | 104 | `sleep_switch` | bool; vendor `01` **live-confirmed** | **LIVE:** returned `68 01 00` (`false`). | **MINI:** `rw` capability only; no saved panel setter call site. No live write. | `false` / `true` | Sleep-mode switch; the schema's untranslated display name is `0min`, so duration behavior is unknown | Very high live type/read; medium broad semantics; write behavior unknown | [S1] [S3] |
 | 105 | `game_flag` | bool (`01`) if carried as an ordinary vendor DP; not live-confirmed | **MINI:** `rw` only; no panel read call site or live record. | Schema capability only; no saved setter or transaction. | `false` / `true` | “Whack-a-mole”/game flag (translated schema label); physical behavior unknown | High schema presence; low behavior and transport | [S1] |
@@ -132,6 +132,8 @@ write-only or unsupported.
   [`../../analysis/compatibility.md`](../../analysis/compatibility.md).
 - **[S7] Conditional non-DP vendor group command:**
   [`post_provision_commit_diff.md`](post_provision_commit_diff.md).
+- **[S8] Authenticated DP 102 write:**
+  [`effect_write_experiment_plan.md`](effect_write_experiment_plan.md).
 
 The APK-derived findings ultimately reproduce from
 `old/apk/olight-3.2.5.apk` (SHA-256
