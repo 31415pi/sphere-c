@@ -229,9 +229,9 @@ or address the Sphere's embedded client as another DP server.
 
 ## Next updates
 
-Update this page after each controlled experiment. In particular,
-record the exact request, acknowledged response, visible device change,
-restoration result, and whether a power cycle preserves the value.
-The first proposed write experiment should save the current effect,
-select one visible effect through DPs 2 and 102, read back status, and
-restore the original effect.
+Update this page after each controlled experiment. Future candidates
+are positive countdown behavior, effect persistence after a true
+battery power-off, and any newly decoded opaque DP. Keep music mode as
+a separate future milestone. For every write, record the exact request,
+acknowledgment, independent readback, visible change, and restoration
+result separately.

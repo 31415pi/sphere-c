@@ -91,10 +91,10 @@ public surface: DP 101, the countdown used by the Sphere panel. A
 guarded countdown API supports get, set, and cancel with strict range
 checks and acknowledged writes. A neutral DP 101=`0` write was echoed
 and independently read back without changing the powered-on state;
-positive durations remain untested. DPs 33, 37, and 38 have opaque payloads;
-DPs 104, 105, and 107 have behavior-unknown flags; and DP 106 is a
-factory-lighting action. Those remain blocked. DP 7 is an unused
-countdown duplicate and is not exposed.
+positive durations remain untested. DPs 33, 37, and 38 have opaque
+payloads; DPs 104, 105, and 107 have behavior-unknown flags; and DP
+106 is a factory-lighting action. Those remain blocked. DP 7 is an
+unused countdown duplicate and is not exposed.
 
 Vendor model `0x07d0:0x0005` is Tuya's client model. The official app
 binds and addresses only server `0x0004`; no saved artifact identifies
@@ -120,12 +120,12 @@ Stage 2 is complete with a versioned, exclusively locked state store,
 write-ahead sequence and TID handling, active-node selection, complete
 session shutdown, and reconnect supervision.
 
-The initial Stage 3 CLI surface is complete. Repeatable `--control`
+The Stage 3 CLI and daemon surfaces are complete. Repeatable `--control`
 commands provide acknowledged read, on, off, and toggle operations and
 print the returned present, target, and effective state. All four were
 verified against the physical Sphere; a two-toggle batch ended with an
-authenticated `present=0` readback. Wiring the same controller into the
-long-running supervisor remains part of the daemon work.
+authenticated `present=0` readback. The same controller is available
+through the serialized local API.
 
 The initial Stage 4 surface is complete. It has a tested controller
 and CLI for acknowledged Lightness, CTL Temperature, HSL, and
@@ -137,10 +137,27 @@ and reversible Set batches succeeded. HSL status can be requantized
 by the firmware after an acknowledged Set, so the controller reports
 later Get results without assuming that the requested tuple persisted.
 
-The initial Stage 5 service is operational. `sphere-meshd` exclusively
+The Stage 5 service is operational. `sphere-meshd` exclusively
 owns the state and persistent proxy connection, reconnects through the
 Stage 2 supervisor, emits structured JSON logs, and exposes versioned
 health and control methods on a private Unix socket. `sphere-meshctl`
 is a separate client with no key access. A hardened systemd user unit
 provides startup and restart supervision. The service and all read-only
 methods have been validated against the physical Sphere.
+
+Stage 6 is complete for the agreed initial scope. The API exposes a
+saved-composition capability summary, semantic names for known DPs,
+the complete visible effect library, and explicit verification fields.
+It reports partial two-write activation failures without pretending the
+resulting device state is known. Offline lifecycle tests cover state
+locking, socket permissions, concurrent request serialization, forced
+reconnection, and cleanup. A live read-only installed-entry-point test
+confirmed status, semantic vendor reads, exclusive ownership, shutdown,
+restart, and reconnection.
+
+Music streaming is a separate future milestone. Positive countdown
+behavior and effect persistence across a true battery power-off are
+deferred until they solve an observed problem. The opaque, uncertain,
+or one-shot DPs listed above remain intentionally unavailable. The
+systemd unit validates successfully, but it was not installed into the
+user service manager during development validation.

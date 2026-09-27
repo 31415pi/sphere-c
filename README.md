@@ -87,6 +87,7 @@ Run the persistent local service and use its separate client:
 ```console
 ./bin/sphere-meshd
 ./bin/sphere-meshctl health
+./bin/sphere-meshctl status
 ./bin/sphere-meshctl control read
 ./bin/sphere-meshctl vendor-read 2 102
 ./bin/sphere-meshctl effect list
@@ -101,8 +102,9 @@ mode-`0600` `state/sphere.sock`. See
 protocol and systemd user-service setup.
 
 The vendor read shown above queries work mode and color mode without
-changing either one. Its result includes decoded enum values and raw
-bytes for continued protocol research.
+changing either one. Its result includes semantic DP names, decoded
+enum values, and raw bytes. `status` reports connection health and
+the controls supported by the saved Mesh composition.
 
 To choose a built-in effect, use its picker slug, such as
 `effect select aurora` (or `effect set aurora`). The schema name
@@ -115,6 +117,11 @@ prove that the light visibly changed. Only the 26 effects shown in the
 saved Sphere panel are writable. `effect list` shows each slug, schema
 name, and label; hidden schema values have no slug. Live activation
 was visually confirmed with Aurora.
+
+API results separate a received response, any value reported in that
+response, an independent readback, and a visual check. Calls do not
+perform visual checks. `effect set` and `effect select` remain synonyms
+for existing clients; `select` better describes the DP 102 operation.
 
 The panel countdown uses DP 101. Use `countdown get` to read its
 remaining seconds, `countdown set SECONDS` to start or change it, and

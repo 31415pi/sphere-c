@@ -24,6 +24,7 @@ In another terminal, inspect health and read states:
 
 ```console
 ./bin/sphere-meshctl health
+./bin/sphere-meshctl status
 ./bin/sphere-meshctl control read
 ./bin/sphere-meshctl lighting lightness
 ./bin/sphere-meshctl lighting temperature
@@ -65,6 +66,7 @@ Successful responses contain `ok: true` and `result`. Failures contain
 | Method | Parameters |
 |---|---|
 | `health` | `{}` |
+| `status` | `{}` |
 | `control` | `{"command":"read|on|off|toggle"}` |
 | `lighting` | `{"command":"lightness|temperature|hsl|xyl..."}` |
 | `vendor.read` | `{"dp_ids":[2,102]}` |
@@ -78,11 +80,31 @@ Successful responses contain `ok: true` and `result`. Failures contain
 
 Lighting commands use the same optional `=value` suffix documented in
 the README. `vendor.read` sends only the Tuya/Olight DP Read opcode and
-returns typed values plus their original bytes. It does not change the
+returns typed values, semantic names for known IDs, and the original
+bytes. Unknown IDs have a `null` name. It does not change the
 Sphere. The response also identifies requested IDs omitted by the
 device. Requests are limited to 64 KiB. Mutating and read commands
 are serialized through the live Mesh session because access responses
 have no correlation identifier beyond source and opcode.
+
+`status` combines the `health` fields with `capabilities` derived from
+the saved Mesh composition. It works while reconnecting. A capability
+means the required server model is present, not that the current link
+is ready or that every device behavior has been visually tested.
+
+Read and write results include `verification`:
+
+| Field | Meaning |
+|---|---|
+| `transport_acknowledged` | The request received its expected Mesh or vendor response. |
+| `response_reported_value` | That response contained a relevant state value. |
+| `independent_readback` | This operation made a separate Get/Read request. |
+| `visually_verified` | A human checked the visible lamp output during this operation. Currently always `false`. |
+
+An acknowledged Set can report a state in its response, but that is
+not an independent readback. An empty vendor DATA response sets only
+`transport_acknowledged`. A Get/Read result can have a missing vendor
+DP even though its request was answered; check `missing_dp_ids` too.
 
 `effect.list` includes all 32 schema effects with their saved English
 labels, canonical schema names, and unique slugs for the 26 shown in
@@ -92,6 +114,12 @@ missing DP 2 is normal in the observed snapshot. `effect.set` and
 `effect.select` are synonyms: they write DP 102 alone, preserving the
 current work mode. `effect.activate` writes DP 2 (`colour`) and then
 DP 102 in separate acknowledged requests, stopping if either fails.
+Both `effect.set` and `effect.select` remain supported for existing
+clients; `effect.select` is the clearer spelling for new clients.
+If the mode write is acknowledged but the effect write fails, the
+error contains `details.completed_steps`, `failed_step`, and
+`result_uncertain`. Clients should read the current effect before
+deciding what to do next.
 Writes accept a visible slug (for example, `aurora`, `color-wheel`,
 `cotton-candy`, or `candy-cane`) or its canonical schema name (for
 example, `colour_2`). The six hidden schema values cannot be written.
@@ -140,6 +168,18 @@ systemctl --user status sphere-mesh.service
 
 The unit uses `%t/sphere-mesh/control.sock`, restarts after failures,
 and restricts filesystem writes to its runtime and state directories.
+The installed client's default socket is the development-tree path, so
+pass the service socket explicitly:
+
+```console
+sphere-meshctl --socket "$XDG_RUNTIME_DIR/sphere-mesh/control.sock" health
+```
+
+The package must be installed in an environment visible on the unit's
+`PATH` (`~/.local/bin`, `/usr/local/bin`, or `/usr/bin`). Check that
+`command -v sphere-meshd` resolves to that installation before enabling
+the unit. A virtual environment elsewhere needs a local `ExecStart`
+override pointing to its absolute `sphere-meshd` executable.
 If running directly from this checkout rather than an installed package,
 override `ExecStart` with the absolute path to `bin/sphere-meshd`.
 
@@ -147,3 +187,29 @@ Do not run the development-tree daemon and systemd service at the same
 time against copies of the same mesh state. Separate sequence cursors
 with the same source address and keys can reuse a nonce and invalidate
 the network's security guarantees.
+
+## Operational validation
+
+The isolated service test uses a temporary state file and socket, and
+replaces the Bluetooth transport with a fake. It checks exclusive state
+ownership, socket permissions and cleanup, health across reconnection,
+and serialization of simultaneous requests. It does not contact a
+device:
+
+```console
+./.venv/bin/python -m pytest -q tests/test_operational.py
+```
+
+After installing the user unit, these checks only inspect service
+status and the local health response:
+
+```console
+systemctl --user status sphere-mesh.service
+systemctl --user show sphere-mesh.service -p MainPID -p ExecMainStatus
+sphere-meshctl --socket "$XDG_RUNTIME_DIR/sphere-mesh/control.sock" health
+```
+
+`health` makes no Mesh request. A `connecting` response can be normal
+while the device is asleep; inspect `last_failure` and the service log
+if it remains disconnected. Do not start a second daemon using a copy
+of the same provisioned state to perform this check.
