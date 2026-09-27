@@ -160,7 +160,8 @@ UI fixes saturation at 1000.
 
 - DP 101 is set to a countdown duration in seconds. The local service
   exposes guarded get, set, and cancel operations for `0..43200`
-  seconds. Positive values may turn the lamp off later.
+  seconds. A live same-value zero write was acknowledged and read back;
+  positive values may turn the lamp off later and remain untested.
 - DP 106 is set to true by “Restore Factory Colors.” It restores
   lighting presets, not mesh ownership or provisioning state.
 - DP 1, DP 3, and DP 5 are written through the ordinary UI but are

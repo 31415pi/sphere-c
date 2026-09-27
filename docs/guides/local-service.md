@@ -106,8 +106,9 @@ through 43200; `countdown.cancel` is equivalent to setting zero. A
 nonzero countdown may turn the lamp off later. Writes require an
 acknowledgment and use no automatic retries. An empty acknowledgment
 confirms receipt without reporting the resulting countdown. These
-commands have only offline test coverage; no live countdown write has
-been validated.
+commands have live wire validation for the neutral value zero: it was
+echoed by the Sphere and independently read back. Positive durations
+and their delayed power-off behavior remain untested.
 
 The service socket is mode `0600`. If its path is occupied by a regular
 file, the daemon refuses to replace it. A stale socket left by a crash

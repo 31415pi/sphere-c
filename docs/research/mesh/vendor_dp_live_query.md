@@ -51,6 +51,17 @@ Another possibility is that DP 2 is write-only or omitted in the
 current state. A mode-changing experiment could distinguish these, but
 was deliberately not performed during this read-only validation.
 
+## Full-schema and all-DP queries
+
+On 2026-09-27, one READ requested all 17 product-schema IDs. A second
+READ used DP ID zero, the APK's all-DP convention. Both returned the
+same five records: DPs 7, 101, 102, 103, and 104. The full-schema query
+omitted DPs 1, 2, 3, 5, 6, 8, 33, 37, 38, 105, 106, and 107.
+
+This confirms that neither an exhaustive ID list nor DP zero reveals
+additional state in the current firmware state. It does not establish
+that the omitted DPs are unsupported or write-only.
+
 ## Implementation consequence
 
 The local controller waits briefly after the first matching DATA reply

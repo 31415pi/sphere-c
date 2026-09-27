@@ -119,8 +119,9 @@ The panel countdown uses DP 101. Use `countdown get` to read its
 remaining seconds, `countdown set SECONDS` to start or change it, and
 `countdown cancel` to set it to zero. `SECONDS` must be an integer from
 0 through 43200. A nonzero countdown can turn the lamp off later.
-Writes require a vendor acknowledgment, but have not been validated
-against a live countdown operation.
+Writes require a vendor acknowledgment. A neutral DP 101=`0` write was
+acknowledged and independently read back; positive durations remain
+untested.
 
 Read the standard lighting states without changing the output:
 

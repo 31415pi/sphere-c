@@ -62,3 +62,24 @@ countdowns, so nonzero values create a delayed off action. Leave DPs
 payload semantics or a controlled observation of the actual UI
 operation. DP 106 should remain blocked even for a same-value probe
 because it is a one-shot reset action.
+
+## Live DP 101 result
+
+On 2026-09-27, the locally provisioned Sphere reported DP 101=`0`.
+The controller then sent the acknowledged payload:
+
+```text
+c9 d0 07 01 65 02 00000000
+```
+
+The Sphere returned the exact DATA echo:
+
+```text
+cd d0 07 01 65 02 00000000
+```
+
+A separate read again returned DP 101=`0`, and Generic OnOff remained
+on. Automatic write retries were disabled. This validates the DP 101
+wire encoding, acknowledgment, neutral write, and readback. It does not
+validate a positive countdown or the eventual power-off action. DP 7
+was not written.

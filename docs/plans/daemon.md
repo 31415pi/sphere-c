@@ -89,7 +89,9 @@ not useful enough to justify early streaming and recovery work.
 The remaining-DP audit found one additional control suitable for the
 public surface: DP 101, the countdown used by the Sphere panel. A
 guarded countdown API supports get, set, and cancel with strict range
-checks and acknowledged writes. DPs 33, 37, and 38 have opaque payloads;
+checks and acknowledged writes. A neutral DP 101=`0` write was echoed
+and independently read back without changing the powered-on state;
+positive durations remain untested. DPs 33, 37, and 38 have opaque payloads;
 DPs 104, 105, and 107 have behavior-unknown flags; and DP 106 is a
 factory-lighting action. Those remain blocked. DP 7 is an unused
 countdown duplicate and is not exposed.
