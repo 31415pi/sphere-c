@@ -15,7 +15,8 @@ processor and firmware image have not been identified conclusively.
 A factory-reset Sphere C has been provisioned into a locally owned
 Bluetooth Mesh network without the Olight app or cloud. The device:
 
-- retains its locally assigned keys across a power cycle;
+- retains its locally assigned keys across disconnect and a
+  button-off/wake cycle;
 - advertises the expected Mesh Proxy Network ID;
 - accepts standard Bluetooth Mesh configuration;
 - returns authenticated Generic OnOff status; and
