@@ -83,6 +83,23 @@ back, and Color Wheel was restored and read back. Power remained on.
 No one observed the lamp during the test, so visible appearance and the
 still-unused DP 2 activation path remain unconfirmed.
 
+Music mode is intentionally deferred because its app implementation is
+not useful enough to justify early streaming and recovery work.
+
+The remaining-DP audit found one additional control suitable for the
+public surface: DP 101, the countdown used by the Sphere panel. A
+guarded countdown API supports get, set, and cancel with strict range
+checks and acknowledged writes. DPs 33, 37, and 38 have opaque payloads;
+DPs 104, 105, and 107 have behavior-unknown flags; and DP 106 is a
+factory-lighting action. Those remain blocked. DP 7 is an unused
+countdown duplicate and is not exposed.
+
+Vendor model `0x07d0:0x0005` is Tuya's client model. The official app
+binds and addresses only server `0x0004`; no saved artifact identifies
+a Sphere feature or safe application query on local client `0x0005`.
+The Linux controller already supplies the external client role, so
+`0x0005` remains unbound and receives no control surface.
+
 ## Current status
 
 Stage 1 is complete. The local adapter, GATT retry/cleanup behavior,

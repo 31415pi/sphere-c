@@ -158,7 +158,9 @@ UI fixes saturation at 1000.
 
 ### Other product write paths
 
-- DP 101 is set to a countdown duration in seconds.
+- DP 101 is set to a countdown duration in seconds. The local service
+  exposes guarded get, set, and cancel operations for `0..43200`
+  seconds. Positive values may turn the lamp off later.
 - DP 106 is set to true by “Restore Factory Colors.” It restores
   lighting presets, not mesh ownership or provisioning state.
 - DP 1, DP 3, and DP 5 are written through the ordinary UI but are
@@ -167,6 +169,17 @@ UI fixes saturation at 1000.
 DPs 6, 7, 33, 37, 38, 104, 105, and 107 are declared writable by the
 schema, but their product write behavior is not yet established well
 enough to expose as control operations.
+
+Music DP 8 is deliberately deferred. Its microphone-driven app mode
+works poorly enough that it is not an initial control priority.
+
+## Second vendor model
+
+Model `0x07d0:0x0005` is Tuya's vendor client; `0x0004` is the server
+used for all DP operations described above. The Olight APK binds only
+`0x0004` and contains no `0x0005`-specific Sphere action or safe query.
+The local controller acts as the external client, so it should not bind
+or address the Sphere's embedded client as another DP server.
 
 ## Known exclusions
 

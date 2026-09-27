@@ -33,6 +33,9 @@ In another terminal, inspect health and read states:
 ./bin/sphere-meshctl effect get
 ./bin/sphere-meshctl effect select colour_2
 ./bin/sphere-meshctl effect activate colour_2
+./bin/sphere-meshctl countdown get
+./bin/sphere-meshctl countdown set 60
+./bin/sphere-meshctl countdown cancel
 ```
 
 The lighting Set syntax matches the direct harness:
@@ -69,6 +72,9 @@ Successful responses contain `ok: true` and `result`. Failures contain
 | `effect.get` | `{}` |
 | `effect.set` or `effect.select` | `{"name":"colour_2"}` |
 | `effect.activate` | `{"name":"colour_2"}` |
+| `countdown.get` | `{}` |
+| `countdown.set` | `{"seconds":60}` |
+| `countdown.cancel` | `{}` |
 
 Lighting commands use the same optional `=value` suffix documented in
 the README. `vendor.read` sends only the Tuya/Olight DP Read opcode and
@@ -92,6 +98,16 @@ for writes. These effect bytes are derived from the saved app and
 are now validated for DP 102: a live experiment selected Aurora,
 read it back, and restored Color Wheel. The DP 2 activation write and
 the corresponding visible output remain untested.
+
+The named countdown commands use DP 101, the countdown used by the
+saved Sphere panel. `countdown.get` returns the current seconds and
+the vendor snapshot. `countdown.set` accepts integer seconds from 0
+through 43200; `countdown.cancel` is equivalent to setting zero. A
+nonzero countdown may turn the lamp off later. Writes require an
+acknowledgment and use no automatic retries. An empty acknowledgment
+confirms receipt without reporting the resulting countdown. These
+commands have only offline test coverage; no live countdown write has
+been validated.
 
 The service socket is mode `0600`. If its path is occupied by a regular
 file, the daemon refuses to replace it. A stale socket left by a crash

@@ -91,6 +91,7 @@ Run the persistent local service and use its separate client:
 ./bin/sphere-meshctl vendor-read 2 102
 ./bin/sphere-meshctl effect list
 ./bin/sphere-meshctl effect get
+./bin/sphere-meshctl countdown get
 ```
 
 The daemon owns the state file and Bluetooth connection exclusively,
@@ -113,6 +114,13 @@ prove that the light visibly changed. Only effects shown in the saved
 Sphere panel are accepted. A live DP 102 experiment successfully
 selected Aurora, read it back, and restored Color Wheel. Visual output
 was not observed during that unattended experiment.
+
+The panel countdown uses DP 101. Use `countdown get` to read its
+remaining seconds, `countdown set SECONDS` to start or change it, and
+`countdown cancel` to set it to zero. `SECONDS` must be an integer from
+0 through 43200. A nonzero countdown can turn the lamp off later.
+Writes require a vendor acknowledgment, but have not been validated
+against a live countdown operation.
 
 Read the standard lighting states without changing the output:
 
