@@ -132,17 +132,53 @@ schema, so schema membership alone does not prove firmware support.
 
 The local service now exposes a named effect catalog and a guarded
 selection command. `sphere-meshctl effect get` reads the vendor
-snapshot. `effect select colour_2` (also `effect set colour_2`) writes
-DP 102 alone; `effect activate colour_2` first writes DP 2=`colour`
+snapshot. `effect select aurora` (also `effect set aurora`) writes
+DP 102 alone; `effect activate aurora` first writes DP 2=`colour`
 and then DP 102, matching the individual-device panel order. Only
-visible picker names are writable. Each write expects DATA and is
+visible picker values are writable. The 26 visible effects have unique
+slugs; canonical schema names such as `colour_2` also work. Catalog
+and current-effect responses contain `slug` and `canonical` metadata.
+Hidden schema values have no slug. Each write expects DATA and is
 sent once, without automatic retries. An empty DATA acknowledgment
 counts as a transport acknowledgment, not proof of a visible change.
 DP 102 writes are live-validated. A same-value write of Color Wheel
 (`07`) was acknowledged, Aurora (`02`) was selected and read back, and
-Color Wheel was restored and read back. DP 2 activation has not been
-written, and no one observed the lamp during the unattended test, so
-the visible animation change remains unconfirmed.
+Color Wheel was restored and read back. A later live activation was
+visually confirmed. The friendly `aurora` name was then independently
+live-tested and read back as canonical `colour_2`.
+
+| Value | Slug | Product label |
+|---:|---|---|
+| 0 | `flame` | Flame |
+| 1 | `cotton-candy` | Cotton Candy |
+| 2 | `aurora` | Aurora |
+| 3 | `fireworks` | Fireworks |
+| 4 | `fountain` | Fountain |
+| 6 | `spiral` | Spiral |
+| 7 | `color-wheel` | Color Wheel |
+| 8 | `red-flash` | Red Flash |
+| 9 | `confetti` | Confetti |
+| 10 | `butterfly` | Butterfly |
+| 11 | `fireball` | Fireball |
+| 12 | `gradient` | Gradient |
+| 13 | `carousel` | Carousel |
+| 15 | `magic-ball` | Magic Ball |
+| 16 | `lilac` | Lilac |
+| 17 | `sunset` | Sunset |
+| 18 | `vibrant` | Vibrant |
+| 20 | `red-light` | Red Light |
+| 21 | `blue-sky` | Blue sky |
+| 24 | `harvest` | Harvest |
+| 25 | `willow-wisp` | Willow Wisp |
+| 26 | `zombie` | Zombie |
+| 28 | `phantom-purple` | Phantom Purple |
+| 29 | `christmas` | Christmas |
+| 30 | `candy-cane` | Candy Cane |
+| 31 | `snowfall` | Snowfall |
+
+Only Aurora has been visually checked so far. The names and values for
+the other entries come from the saved product picker, and their host
+encoding is covered by the offline test suite.
 
 ### Music mode
 

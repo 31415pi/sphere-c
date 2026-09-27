@@ -384,8 +384,9 @@ asking the lamp firmware to run a DP 102 built-in effect.
 4. The vendor server and opcode family are `0x07d0:0x0004` and
    `c9/ca/cc/cd d0 07`.
 5. The host controller implements guarded DP 102 effect selection.
-6. A later live experiment validated DP 102 selection, readback, and
-   restoration; visible appearance and DP 2 activation remain untested.
+6. Later live experiments validated sequential DP 2=`colour` and
+   DP 102 activation. Aurora was visibly animated and independently
+   read back; Color Wheel retained the previous static red color.
 
 ### Derived / strong
 

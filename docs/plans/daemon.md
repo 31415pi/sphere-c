@@ -77,11 +77,11 @@ same records for DPs 7, 101, 102, 103, and 104. DP 102 was enum 7
 the requested-ID list as a status-refresh trigger rather than a strict
 projection, or that DP 2 is not readable in the current state.
 
-A reversible live experiment validated DP 102 writes. Color Wheel (`7`)
-was acknowledged, Aurora (`2`) was selected and independently read
-back, and Color Wheel was restored and read back. Power remained on.
-No one observed the lamp during the test, so visible appearance and the
-still-unused DP 2 activation path remain unconfirmed.
+Live experiments validated DP 102 writes and the sequential activation
+path. DP 2=`colour` and DP 102=`07` were echoed; Color Wheel retained
+the existing static red color. Selecting Aurora (`02`) was echoed,
+independently read back, and visibly animated. Standard lighting model
+states remained static during the animation, and power remained on.
 
 Music mode is intentionally deferred because its app implementation is
 not useful enough to justify early streaming and recovery work.

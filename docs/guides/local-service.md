@@ -31,8 +31,8 @@ In another terminal, inspect health and read states:
 ./bin/sphere-meshctl vendor-read 2 102
 ./bin/sphere-meshctl effect list
 ./bin/sphere-meshctl effect get
-./bin/sphere-meshctl effect select colour_2
-./bin/sphere-meshctl effect activate colour_2
+./bin/sphere-meshctl effect select aurora
+./bin/sphere-meshctl effect activate aurora
 ./bin/sphere-meshctl countdown get
 ./bin/sphere-meshctl countdown set 60
 ./bin/sphere-meshctl countdown cancel
@@ -70,8 +70,8 @@ Successful responses contain `ok: true` and `result`. Failures contain
 | `vendor.read` | `{"dp_ids":[2,102]}` |
 | `effect.list` | `{}` |
 | `effect.get` | `{}` |
-| `effect.set` or `effect.select` | `{"name":"colour_2"}` |
-| `effect.activate` | `{"name":"colour_2"}` |
+| `effect.set` or `effect.select` | `{"name":"aurora"}` |
+| `effect.activate` | `{"name":"aurora"}` |
 | `countdown.get` | `{}` |
 | `countdown.set` | `{"seconds":60}` |
 | `countdown.cancel` | `{}` |
@@ -85,19 +85,23 @@ are serialized through the live Mesh session because access responses
 have no correlation identifier beyond source and opcode.
 
 `effect.list` includes all 32 schema effects with their saved English
-labels and marks the 26 shown in the panel. `effect.get` reads DPs 2
-and 102 and reports the current effect when DP 102 is returned. A
+labels, canonical schema names, and unique slugs for the 26 shown in
+the panel. Hidden entries have a `null` slug. `effect.get` returns the
+same metadata for the current effect and reads DPs 2 and 102. A
 missing DP 2 is normal in the observed snapshot. `effect.set` and
 `effect.select` are synonyms: they write DP 102 alone, preserving the
 current work mode. `effect.activate` writes DP 2 (`colour`) and then
 DP 102 in separate acknowledged requests, stopping if either fails.
-Only visible picker names are accepted for writes. Write responses
+Writes accept a visible slug (for example, `aurora`, `color-wheel`,
+`cotton-candy`, or `candy-cane`) or its canonical schema name (for
+example, `colour_2`). The six hidden schema values cannot be written.
+Write responses
 may contain only an empty DATA acknowledgment, which confirms receipt
 but not the resulting appearance. No automatic retransmission is used
 for writes. These effect bytes are derived from the saved app and
 are now validated for DP 102: a live experiment selected Aurora,
-read it back, and restored Color Wheel. The DP 2 activation write and
-the corresponding visible output remain untested.
+read it back, and restored Color Wheel. Live activation and visible
+output have since been confirmed.
 
 The named countdown commands use DP 101, the countdown used by the
 saved Sphere panel. `countdown.get` returns the current seconds and

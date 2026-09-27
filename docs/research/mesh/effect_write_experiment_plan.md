@@ -140,10 +140,60 @@ No person was present to observe the lamp, so this proves write
 acceptance, state change, readback, and restoration but does not prove
 that the visible animation changed to the expected appearance.
 
-This live result validates the derived plain DP 102 WRITE grammar and
-shows that a successful write response echoes DP 102 directly. It does
-not validate DP 2=`colour`, `effect activate`, hidden effects, or
-power-cycle persistence.
+This first live result validates the derived plain DP 102 WRITE grammar
+and shows that a successful write response echoes DP 102 directly. It
+did not yet validate DP 2=`colour`, `effect activate`, hidden effects,
+or power-cycle persistence.
+
+## Live activation and visible effect
+
+A second experiment on 2026-09-27 tested the app's sequential
+individual-device path. Before activation, the Sphere was on and showed
+the previously configured static red output. Standard model reads were
+Lightness 1956, Temperature 800 K, and HSL lightness 3637, hue 1820,
+saturation 65535. DP 102 was still Color Wheel (`07`).
+
+The controller sent DP 2=`colour` and then DP 102=`colour_7` as two
+separate acknowledged writes:
+
+```text
+c9 d0 07 01 02 04 01
+c9 d0 07 01 66 04 07
+```
+
+The Sphere echoed both records exactly:
+
+```text
+cd d0 07 01 02 04 01
+cd d0 07 01 66 04 07
+```
+
+The Sphere remained static red. The mini-app treats Color Wheel as an
+interactive color-selection mode, so this is consistent with retaining
+the last chosen static color rather than starting an animation.
+
+With DP 2 now confirmed as `colour`, the controller selected Aurora:
+
+```text
+c9 d0 07 01 66 04 02
+cd d0 07 01 66 04 02
+```
+
+The user visually confirmed that the Sphere began animating. A separate
+READ returned DP 102=`02`, and Generic OnOff remained on. Repeated
+standard Lightness, Temperature, and HSL reads did not change, showing
+that those SIG states do not report the instantaneous animation output.
+
+This validates the sequential DP 2/DP 102 activation path and the
+visible execution of at least one built-in effect. The Sphere was left
+running Aurora. Hidden effects, combined multi-DP activation, and
+power-cycle persistence remain untested.
+
+After adding human-readable effect aliases, a final same-value live
+test sent `effect select aurora`. The service resolved it to
+`colour_2`, received an exact DP 102=`02` acknowledgment, and read the
+same value back in a separate query. This validates the alias path
+without changing the running effect.
 
 ## Sources
 

@@ -104,16 +104,17 @@ The vendor read shown above queries work mode and color mode without
 changing either one. Its result includes decoded enum values and raw
 bytes for continued protocol research.
 
-To choose a built-in effect by its schema name, use
-`effect select colour_2` (or `effect set colour_2`). This sends only
+To choose a built-in effect, use its picker slug, such as
+`effect select aurora` (or `effect set aurora`). The schema name
+`colour_2` also works. This sends only
 DP 102 and leaves the current work mode as reported by the device.
-`effect activate colour_2` first sets DP 2 to colour mode, then selects
+`effect activate aurora` first sets DP 2 to colour mode, then selects
 DP 102. Both operations require a DATA acknowledgment for each write;
 the response may be an empty acknowledgment, so it does not by itself
-prove that the light visibly changed. Only effects shown in the saved
-Sphere panel are accepted. A live DP 102 experiment successfully
-selected Aurora, read it back, and restored Color Wheel. Visual output
-was not observed during that unattended experiment.
+prove that the light visibly changed. Only the 26 effects shown in the
+saved Sphere panel are writable. `effect list` shows each slug, schema
+name, and label; hidden schema values have no slug. Live activation
+was visually confirmed with Aurora.
 
 The panel countdown uses DP 101. Use `countdown get` to read its
 remaining seconds, `countdown set SECONDS` to start or change it, and
