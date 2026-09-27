@@ -43,9 +43,11 @@ physical wake, although a five-second reconnect scan can miss it.
 
 ## 4. Standard lighting models
 
-Implement brightness, color temperature, HSL, and xyL operations
-against the standard models present in the Sphere's Composition Data.
-Read status back from the device rather than assuming a Set succeeded.
+Implement brightness, color temperature, and HSL operations against
+the standard models present in the Sphere's Composition Data. Keep
+xyL capability-gated: its codec is useful for other nodes, but the
+observed Sphere C has no xyL Server. Read status back from the device
+rather than assuming a Set succeeded.
 
 ## 5. Stable local API and service
 
@@ -73,7 +75,7 @@ the physical pairing gesture returned it to an unprovisioned beacon,
 and Linux reclaimed it at `0x0118`. A separate connection then returned
 an authenticated status using the retained local keys.
 
-Stage 2 is beginning with a versioned, exclusively locked state store,
+Stage 2 is complete with a versioned, exclusively locked state store,
 write-ahead sequence and TID handling, active-node selection, complete
 session shutdown, and reconnect supervision.
 
@@ -83,3 +85,13 @@ print the returned present, target, and effective state. All four were
 verified against the physical Sphere; a two-toggle batch ended with an
 authenticated `present=0` readback. Wiring the same controller into the
 long-running supervisor remains part of the daemon work.
+
+The initial Stage 4 surface is complete. It has a tested controller
+and CLI for acknowledged Lightness, CTL Temperature, HSL, and
+capability-gated xyL Get/Set operations.
+Each operation resolves the server's element from saved Composition
+Data and reports the returned status. The observed Sphere C supports
+the first three models and correctly rejects xyL locally. Live read
+and reversible Set batches succeeded. HSL status can be requantized
+by the firmware after an acknowledged Set, so the controller reports
+later Get results without assuming that the requested tuple persisted.

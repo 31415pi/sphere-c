@@ -20,8 +20,10 @@ Bluetooth Mesh network without the Olight app or cloud. The device:
 - advertises the expected Mesh Proxy Network ID;
 - accepts standard Bluetooth Mesh configuration;
 - returns authenticated Generic OnOff status; and
-- exposes standard Lightness, CTL, HSL, and xyL models, plus two
-  Olight vendor models.
+- exposes standard Lightness, CTL, and HSL models, plus two Olight
+  vendor models; and
+- does not expose a standard xyL Server, despite an earlier model-ID
+  misidentification.
 
 The current device address, keys, sequence cursor, captures, and phone
 artifacts are deliberately excluded from Git.
@@ -79,6 +81,27 @@ Run several acknowledged commands over one connection:
 Available commands are `read`, `on`, `off`, and `toggle`. Each command
 reports the state acknowledged by the Sphere. Repeating `--control`
 keeps the batch on one GATT Proxy connection.
+
+Read the standard lighting states without changing the output:
+
+```console
+./bin/sphere-mesh --lighting lightness \
+  --lighting temperature --lighting hsl
+```
+
+Set raw Bluetooth Mesh lighting values and read back the acknowledged
+state:
+
+```console
+./bin/sphere-mesh --lighting lightness=32768
+./bin/sphere-mesh --lighting temperature=5000
+./bin/sphere-mesh --lighting hsl=32768,0,65535
+```
+
+The HSL order is lightness, hue, saturation. Values are unsigned
+16-bit integers; temperature is in kelvin. The CLI also understands
+xyL messages for nodes that advertise an xyL Server, but reports the
+operation as unsupported for the observed Sphere C composition.
 
 Run the project unit tests:
 

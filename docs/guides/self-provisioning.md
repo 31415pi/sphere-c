@@ -35,8 +35,8 @@ The authoritative composition identifies the device as:
 - version ID `0x3530`
 - six elements
 - Relay, Proxy, and Friend features (`0x0007`)
-- a primary element with standard Generic OnOff, Generic Level,
-  Light Lightness, CTL, HSL, and xyL models
+- a primary element with standard Generic OnOff, Light Lightness,
+  CTL, and HSL models
 - two Olight vendor models, `0x07d0:0x0004` and
   `0x07d0:0x0005`
 - five secondary elements, each with a Generic OnOff Server
@@ -45,6 +45,10 @@ This proves that ordinary Bluetooth Mesh tooling can control the
 standard lighting surface. No hidden vendor activation command was
 needed. The vendor models are still likely needed for Olight-specific
 effects and settings.
+
+The primary element does not contain Generic Level or Light xyL.
+Earlier notes mistook the HSL Hue and Saturation Servers `0x130a` and
+`0x130b` for xyL; the actual xyL Server would be `0x130c`.
 
 The successful persistent capture is under
 `old/captures/self-provisioning/`. The key-bearing state is
