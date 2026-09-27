@@ -6,6 +6,8 @@
   factory-reset, provisioning, configuration, and recovery procedure.
 - [Key extraction](guides/key-extraction.md) records the phone and app
   investigation path for an existing vendor-owned mesh.
+- [Vendor datapoints](guides/vendor-datapoints.md) is the living
+  reference for readable and writable Sphere-specific functionality.
 
 ## Analysis
 

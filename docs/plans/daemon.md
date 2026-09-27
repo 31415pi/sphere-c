@@ -61,6 +61,20 @@ Capture and decode the two Olight vendor models to support patterns,
 animations, saved settings, and other behavior not represented by the
 standard Bluetooth Mesh lighting models.
 
+The first Stage 6 slice implements the Tuya/Olight datapoint framing
+used by vendor server `0x07d0:0x0004`, including strict typed response
+parsing. A read-only service operation can query selected datapoints
+without changing the lamp. Effect writes remain deliberately disabled
+until a separately reviewed, reversible write experiment is approved.
+
+Live reads confirmed the grammar and exposed a two-part response: a
+short empty DATA acknowledgment followed by a segmented status
+snapshot. Reads for DP 2, DP 102, and both together all returned the
+same records for DPs 7, 101, 102, 103, and 104. DP 102 was enum 7
+(`colour_7`); DP 2 was omitted. This indicates that the firmware treats
+the requested-ID list as a status-refresh trigger rather than a strict
+projection, or that DP 2 is not readable in the current state.
+
 ## Current status
 
 Stage 1 is complete. The local adapter, GATT retry/cleanup behavior,

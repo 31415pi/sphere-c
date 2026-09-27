@@ -88,6 +88,7 @@ Run the persistent local service and use its separate client:
 ./bin/sphere-meshd
 ./bin/sphere-meshctl health
 ./bin/sphere-meshctl control read
+./bin/sphere-meshctl vendor-read 2 102
 ```
 
 The daemon owns the state file and Bluetooth connection exclusively,
@@ -95,6 +96,10 @@ reconnects automatically, and serves a versioned JSON API on the
 mode-`0600` `state/sphere.sock`. See
 [`docs/guides/local-service.md`](docs/guides/local-service.md) for the
 protocol and systemd user-service setup.
+
+The vendor read shown above queries work mode and color mode without
+changing either one. Its result includes decoded enum values and raw
+bytes for continued protocol research.
 
 Read the standard lighting states without changing the output:
 

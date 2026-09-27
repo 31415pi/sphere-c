@@ -28,6 +28,7 @@ In another terminal, inspect health and read states:
 ./bin/sphere-meshctl lighting lightness
 ./bin/sphere-meshctl lighting temperature
 ./bin/sphere-meshctl lighting hsl
+./bin/sphere-meshctl vendor-read 2 102
 ```
 
 The lighting Set syntax matches the direct harness:
@@ -59,9 +60,13 @@ Successful responses contain `ok: true` and `result`. Failures contain
 | `health` | `{}` |
 | `control` | `{"command":"read|on|off|toggle"}` |
 | `lighting` | `{"command":"lightness|temperature|hsl|xyl..."}` |
+| `vendor.read` | `{"dp_ids":[2,102]}` |
 
 Lighting commands use the same optional `=value` suffix documented in
-the README. Requests are limited to 64 KiB. Mutating and read commands
+the README. `vendor.read` sends only the Tuya/Olight DP Read opcode and
+returns typed values plus their original bytes. It does not change the
+Sphere. The response also identifies requested IDs omitted by the
+device. Requests are limited to 64 KiB. Mutating and read commands
 are serialized through the live Mesh session because access responses
 have no correlation identifier beyond source and opcode.
 
