@@ -1,0 +1,100 @@
+# Local Sphere service
+
+## Purpose
+
+`sphere-meshd` is the sole owner of the Bluetooth Mesh state and GATT
+Proxy connection. It keeps the state file exclusively locked, reconnects
+after link loss, and exposes a versioned local API through a private
+Unix-domain socket. `sphere-meshctl` is a separate client; it never reads
+mesh keys or opens Bluetooth itself.
+
+The service emits one JSON log object per line. Health responses expose
+connection state, generation, active device address, and the most recent
+failure. They do not expose the NetKey, AppKey, or DeviceKey.
+
+## Development-tree use
+
+Start the service using the already provisioned state:
+
+```console
+./bin/sphere-meshd
+```
+
+In another terminal, inspect health and read states:
+
+```console
+./bin/sphere-meshctl health
+./bin/sphere-meshctl control read
+./bin/sphere-meshctl lighting lightness
+./bin/sphere-meshctl lighting temperature
+./bin/sphere-meshctl lighting hsl
+```
+
+The lighting Set syntax matches the direct harness:
+
+```console
+./bin/sphere-meshctl lighting lightness=32768
+./bin/sphere-meshctl lighting temperature=5000
+./bin/sphere-meshctl lighting hsl=32768,0,65535
+```
+
+Only one process may own the state. Stop the service before running a
+direct `sphere-mesh` command against the same state file.
+
+## API protocol
+
+The socket carries one newline-terminated JSON request and response per
+connection. Version 1 requests have this envelope:
+
+```json
+{"version":1,"id":1,"method":"health","params":{}}
+```
+
+Successful responses contain `ok: true` and `result`. Failures contain
+`ok: false` and an error object with a stable `code` and human-readable
+`message`. Current methods are:
+
+| Method | Parameters |
+|---|---|
+| `health` | `{}` |
+| `control` | `{"command":"read|on|off|toggle"}` |
+| `lighting` | `{"command":"lightness|temperature|hsl|xyl..."}` |
+
+Lighting commands use the same optional `=value` suffix documented in
+the README. Requests are limited to 64 KiB. Mutating and read commands
+are serialized through the live Mesh session because access responses
+have no correlation identifier beyond source and opcode.
+
+The service socket is mode `0600`. If its path is occupied by a regular
+file, the daemon refuses to replace it. A stale socket left by a crash
+is removed only after a connection attempt proves no service is
+listening.
+
+## systemd user service
+
+An example unit is in `packaging/systemd/sphere-mesh.service`. It expects
+the console programs to be installed on the user PATH and the private
+state file at:
+
+```text
+~/.local/state/sphere-mesh/state.json
+```
+
+Install the unit under `~/.config/systemd/user/`, place the existing
+mode-`0600` state file at that location, and then run:
+
+```console
+systemctl --user daemon-reload
+systemctl --user enable --now sphere-mesh.service
+systemctl --user status sphere-mesh.service
+```
+
+The unit uses `%t/sphere-mesh/control.sock`, restarts after failures,
+and restricts filesystem writes to its runtime and state directories.
+If running directly from this checkout rather than an installed package,
+override `ExecStart` with the absolute path to `bin/sphere-meshd`.
+
+Do not run the development-tree daemon and systemd service at the same
+time against copies of the same mesh state. Separate sequence cursors
+with the same source address and keys can reuse a nonce and invalidate
+the network's security guarantees.

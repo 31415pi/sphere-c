@@ -95,3 +95,11 @@ the first three models and correctly rejects xyL locally. Live read
 and reversible Set batches succeeded. HSL status can be requantized
 by the firmware after an acknowledged Set, so the controller reports
 later Get results without assuming that the requested tuple persisted.
+
+The initial Stage 5 service is operational. `sphere-meshd` exclusively
+owns the state and persistent proxy connection, reconnects through the
+Stage 2 supervisor, emits structured JSON logs, and exposes versioned
+health and control methods on a private Unix socket. `sphere-meshctl`
+is a separate client with no key access. A hardened systemd user unit
+provides startup and restart supervision. The service and all read-only
+methods have been validated against the physical Sphere.
