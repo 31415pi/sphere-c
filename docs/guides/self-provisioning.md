@@ -19,12 +19,14 @@ Proxy connection then returned another authenticated Generic OnOff
 Status. This proves retained network membership, AppKey, and model
 binding across disconnect and beyond the earlier rollback window.
 
-The final durability test fully powered the Sphere off for about 10
-seconds and turned it back on. After reboot it again advertised our
-exact Network ID and answered a read-only Generic OnOff Get with
-`present=1`. The chosen NetKey, DeviceKey, AppKey, unicast address,
-and model configuration therefore survived a real power cycle in
-nonvolatile storage.
+The final durability test turned the Sphere off with its button for
+about 10 seconds and turned it back on. After waking it again
+advertised our exact Network ID and answered a read-only Generic OnOff
+Get with `present=1`. The chosen NetKey, DeviceKey, AppKey, unicast
+address, and model configuration therefore survived a button-off/wake
+cycle. This was not a verified hard power cycle: the internal battery
+is not removable, and turning the light output off does not establish
+that the controller lost power.
 
 The authoritative composition identifies the device as:
 
