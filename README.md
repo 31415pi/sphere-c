@@ -67,8 +67,18 @@ Create or validate local key state without using Bluetooth:
 Read the already provisioned Sphere without changing its light state:
 
 ```console
-./bin/sphere-mesh --toggle-only --no-toggle
+./bin/sphere-mesh --control read
 ```
+
+Run several acknowledged commands over one connection:
+
+```console
+./bin/sphere-mesh --control read --control on --control off
+```
+
+Available commands are `read`, `on`, `off`, and `toggle`. Each command
+reports the state acknowledged by the Sphere. Repeating `--control`
+keeps the batch on one GATT Proxy connection.
 
 Run the project unit tests:
 

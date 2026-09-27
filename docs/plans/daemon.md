@@ -35,6 +35,12 @@ Expose read, on, off, and toggle operations. Commands must use
 acknowledged messages, report the Sphere's returned state, and fail
 clearly when the proxy or node is unavailable.
 
+The first CLI surface accepts repeatable `--control` options so a batch
+can share one GATT Proxy connection. This matters on the Sphere C: a
+clean client disconnect can pause its connectable advertising window.
+A 30-second scan showed that Network ID advertising resumes without a
+physical wake, although a five-second reconnect scan can miss it.
+
 ## 4. Standard lighting models
 
 Implement brightness, color temperature, HSL, and xyL operations
@@ -70,3 +76,10 @@ an authenticated status using the retained local keys.
 Stage 2 is beginning with a versioned, exclusively locked state store,
 write-ahead sequence and TID handling, active-node selection, complete
 session shutdown, and reconnect supervision.
+
+The initial Stage 3 CLI surface is complete. Repeatable `--control`
+commands provide acknowledged read, on, off, and toggle operations and
+print the returned present, target, and effective state. All four were
+verified against the physical Sphere; a two-toggle batch ended with an
+authenticated `present=0` readback. Wiring the same controller into the
+long-running supervisor remains part of the daemon work.
