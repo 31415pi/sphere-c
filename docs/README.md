@@ -28,8 +28,10 @@
 
 - [Daemon plan](plans/daemon.md) is the staged roadmap for a persistent
   Linux control service.
-- [Desktop GUI plan](plans/desktop-gui.md) defines the proposed
-  phone-inspired desktop client without implementing it.
+- [Desktop GUI plan](plans/desktop-gui.md) records the initial design
+  and phased scope for the now-implemented desktop client.
+- [Project continuation handoff](plans/continuation.md) summarizes the
+  current status, safety rules, and next milestones for future work.
 
 ## Research
 

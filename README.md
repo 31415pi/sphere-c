@@ -3,8 +3,8 @@ Bart Massey and Codex 2026
 
 This repository documents and implements local Linux control of the
 USB-C Olight Sphere C. It contains capture-analysis tools, a working
-Bluetooth Mesh provisioner, and the beginnings of a persistent Linux
-control daemon.
+Bluetooth Mesh provisioner, a persistent Linux control daemon, and an
+optional desktop client.
 
 The original magnetic-charge Sphere is treated as a separate, untested
 device. The Mesh transport and standard lighting controls may work if
@@ -24,7 +24,7 @@ Bluetooth Mesh network without the Olight app or cloud. The device:
   button-off/wake cycle;
 - advertises the expected Mesh Proxy Network ID;
 - accepts standard Bluetooth Mesh configuration;
-- returns authenticated Generic OnOff status; and
+- returns authenticated Generic OnOff status;
 - exposes standard Lightness, CTL, and HSL models, plus two Olight
   vendor models; and
 - does not expose a standard xyL Server, despite an earlier model-ID
@@ -49,7 +49,8 @@ artifacts are deliberately excluded from Git.
   The entire directory is ignored.
 
 See [the documentation index](docs/README.md) for the main guides and
-research map.
+research map. Future work should begin with the
+[project continuation handoff](docs/plans/continuation.md).
 
 ## Setup
 
@@ -134,8 +135,8 @@ DP 102. Both operations require a DATA acknowledgment for each write;
 the response may be an empty acknowledgment, so it does not by itself
 prove that the light visibly changed. Only the 26 preset values shown
 in the saved Sphere panel are writable. `effect list` shows each slug,
-schema name, and label; hidden schema values have no slug. Live activation
-was visually confirmed with Aurora.
+schema name, and label; hidden schema values have no slug. Live
+activation was visually confirmed with Aurora.
 
 API results separate a received response, any value reported in that
 response, an independent readback, and a visual check. Calls do not
