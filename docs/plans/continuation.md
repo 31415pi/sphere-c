@@ -257,6 +257,12 @@ experiment.
   persistence were explicitly deferred as low-value work.
 - Persisting work mode across daemon restarts was acknowledged as a
   limitation and explicitly deferred.
+- A preferred future simplification is to ignore missing DP 2 at GUI
+  startup: while power is on, treat readable DP 102 as the active
+  preset, mapping `colour_7`/Color Wheel to solid-color mode and every
+  other visible value to effect mode. This deliberately assumes no
+  external controller has left the device in `white`, `scene`, or
+  `music`; revisit the rule if those modes become supported.
 - Multi-Sphere support was requested as an architecture plan only. Do
   not begin it without a new request.
 - Restoring ownership to the phone app and taking it back from the app
