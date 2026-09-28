@@ -40,6 +40,12 @@ messages cannot interleave. `GattBearer` sizes each frame from
 23-byte ATT MTU. Every write uses `response=False`; completion of the Bleak
 call is not an application-level delivery acknowledgment.
 
+For direct Linux connections, `LocalTransport` asks Bleak's BlueZ backend
+to acquire the negotiated ATT MTU before the bearer reads `mtu_size`. If
+BlueZ cannot acquire it, the backend uses the conservative 23-byte
+minimum and logs a warning. ESPHome proxy connections use their own
+backend's MTU reporting.
+
 The captured phone connection used an 18.75 ms connection interval, latency
 zero, and a five-second supervision timeout. All captured Proxy messages had
 Proxy SAR `Complete`, including 29-byte Network PDUs. A 29-byte Network PDU

@@ -62,3 +62,20 @@ in the user's service manager. Positive countdown behavior, a true
 battery-off persistence test, and induced failure between live effect
 writes were not needed for this milestone. Partial activation behavior
 is covered offline and exposed through structured API error details.
+
+## Desktop live-trial observations
+
+A first desktop-GUI trial on 2026-09-27 added three product-specific
+observations:
+
+- CTL Temperature Sets received protocol support but produced no obvious
+  visible change. The saved Sphere phone panel also has no temperature
+  control, so the desktop app no longer presents or polls it.
+- A bright pale-yellow static color made the cap LEDs appear much
+  brighter than the cylinder LEDs; the cylinder may have been extremely
+  dim or unlit. This was an uncontrolled visual observation, not evidence
+  of separate addressable zones or failed emitters.
+- After Flame was active, activating Cotton Candy timed out waiting for
+  an acknowledged vendor DP write. No automatic write retry was made.
+  Structured error details now identify whether the mode write or
+  effect write lacked a reply.

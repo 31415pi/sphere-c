@@ -6,9 +6,14 @@ USB-C Olight Sphere C. It contains capture-analysis tools, a working
 Bluetooth Mesh provisioner, and the beginnings of a persistent Linux
 control daemon.
 
-The original magnetic-charge Sphere is treated as a separate device.
-Research about it is retained under `docs/research/hardware/`, but its
-processor and firmware image have not been identified conclusively.
+The original magnetic-charge Sphere is treated as a separate, untested
+device. The Mesh transport and standard lighting controls may work if
+its advertised services and composition match, but the current effect,
+battery, and countdown mappings are Sphere C-specific and must not be
+assumed. Do not provision an original merely to discover its protocol.
+See the
+[original-Sphere compatibility assessment](docs/research/compatibility/original-sphere.md)
+and its passive-first trial procedure before using these tools with one.
 
 ## Current result
 
@@ -101,6 +106,20 @@ mode-`0600` `state/sphere.sock`. See
 [`docs/guides/local-service.md`](docs/guides/local-service.md) for the
 protocol and systemd user-service setup.
 
+Install the optional Qt desktop client and launch it alongside the
+daemon:
+
+```console
+./.venv/bin/pip install -e '.[gui]'
+./.venv/bin/sphere-mesh-gui
+```
+
+The app provides power, brightness, phone-compatible HSV color, 25
+built-in lighting presets, connection diagnostics, and battery status.
+It talks only to the private daemon socket and never reads Mesh keys or
+opens Bluetooth itself. See
+[`docs/guides/desktop-app.md`](docs/guides/desktop-app.md).
+
 The vendor read shown above queries work mode and color mode without
 changing either one. Its result includes semantic DP names, decoded
 enum values, and raw bytes. `status` reports connection health and
@@ -113,9 +132,9 @@ DP 102 and leaves the current work mode as reported by the device.
 `effect activate aurora` first sets DP 2 to colour mode, then selects
 DP 102. Both operations require a DATA acknowledgment for each write;
 the response may be an empty acknowledgment, so it does not by itself
-prove that the light visibly changed. Only the 26 effects shown in the
-saved Sphere panel are writable. `effect list` shows each slug, schema
-name, and label; hidden schema values have no slug. Live activation
+prove that the light visibly changed. Only the 26 preset values shown
+in the saved Sphere panel are writable. `effect list` shows each slug,
+schema name, and label; hidden schema values have no slug. Live activation
 was visually confirmed with Aurora.
 
 API results separate a received response, any value reported in that

@@ -20,6 +20,21 @@ Start the service using the already provisioned state:
 ./bin/sphere-meshd
 ```
 
+To watch app commands and their Mesh responses, start it with
+`--verbose`:
+
+```console
+./bin/sphere-meshd --verbose
+```
+
+Each debug interaction appears in a JSON log line. The trace shows
+the API method and accepted parameters, Mesh operation and elapsed
+time, decoded response, or error type. Effect activation shows the
+mode and effect writes separately. Invalid parameters are redacted;
+Mesh keys, state contents, and raw vendor bytes are omitted. Stop the
+existing daemon before starting this instance, since only one daemon
+can own the state and Bluetooth connection.
+
 In another terminal, inspect health and read states:
 
 ```console
@@ -110,10 +125,17 @@ DP even though its request was answered; check `missing_dp_ids` too.
 labels, canonical schema names, and unique slugs for the 26 shown in
 the panel. Hidden entries have a `null` slug. `effect.get` returns the
 same metadata for the current effect and reads DPs 2 and 102. A
-missing DP 2 is normal in the observed snapshot. `effect.set` and
-`effect.select` are synonyms: they write DP 102 alone, preserving the
-current work mode. `effect.activate` writes DP 2 (`colour`) and then
-DP 102 in separate acknowledged requests, stopping if either fails.
+missing DP 2 is normal in the observed snapshot. Its `work_mode`
+field is DP 2's numeric value, and `effect_active` is true only
+when that mode is `colour` (1). Both are `null` when the mode is
+unknown. `work_mode_source` is `readback`, `cached`, or `null`;
+the cache holds the last known mode for the current daemon connection
+and may be stale if another client changes the mode while DP 2 reads
+omit it. The selected DP 102 effect alone does not prove it is active.
+`effect.set` and `effect.select` are synonyms: they write DP 102 alone,
+preserving the current work mode. `effect.activate` writes DP 2
+(`colour`) and then DP 102 in separate acknowledged requests, stopping
+if either fails.
 Both `effect.set` and `effect.select` remain supported for existing
 clients; `effect.select` is the clearer spelling for new clients.
 If the mode write is acknowledged but the effect write fails, the

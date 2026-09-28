@@ -2,10 +2,16 @@
 
 ## Result
 
-The evidence supports treating Sphere C as the same Olight/Tuya
-Bluetooth Mesh product family as the original Sphere. It does not
-yet prove that the two devices have identical composition data,
-vendor features, or firmware.
+The evidence supports treating Sphere C as probably belonging to the
+same broad Olight/Tuya product family as the original Sphere. It does
+not establish that the current code works unchanged with the original,
+or that the two devices have identical transport, composition data,
+vendor features, or firmware. No original Sphere has been tested with
+this repository.
+
+For the current code-level assessment, model-specific unknowns, and a
+passive-first trial procedure, see
+[`research/compatibility/original-sphere.md`](../research/compatibility/original-sphere.md).
 
 Work on the original Sphere should be reused in layers:
 

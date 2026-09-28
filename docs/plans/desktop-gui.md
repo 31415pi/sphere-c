@@ -1,5 +1,14 @@
 # Sphere C desktop GUI plan
 
+## Implementation status
+
+The first useful release described here was implemented on 2026-09-27.
+It includes the daemon socket client, reconnect polling, read-only state
+refresh, standard lighting controls, the visible effect catalog and
+activation flow, partial-failure recovery, diagnostics, QML interface,
+desktop metadata, original icon, and offline tests. Countdown, music,
+host-side animation, and service management remain deferred features.
+
 ## Goal
 
 Build a polished Linux desktop client in the general spirit of the
@@ -16,7 +25,7 @@ layout or colors.
 
 ## Architecture choice
 
-Use PySide6 with QML for the first implementation.
+The implementation uses PySide6 with QML.
 
 - The repository and daemon are already Python.
 - QML suits a responsive, touch-friendly, phone-like control surface.
@@ -53,7 +62,10 @@ can appear later when their daemon features are intentionally promoted.
 
 ### Light
 
-Provide power state, brightness, color temperature, and HSL color.
+Provide power state, brightness, and phone-compatible HSV color over
+the Mesh HSL model. Keep the advertised CTL Temperature model out of
+the desktop surface unless later live testing establishes a useful
+visible behavior.
 
 - Read all available standard lighting state on entry and after a
   reconnect.
@@ -123,7 +135,7 @@ command pending, and recoverable error. Connection state comes from
 
 3. **Standard lighting control**
 
-   Add power, brightness, temperature, and HSL interactions with pending
+   Add power, brightness, and HSV-to-HSL interactions with pending
    state, returned-state reconciliation, and keyboard accessibility.
 
 4. **Effect library**

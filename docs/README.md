@@ -10,6 +10,8 @@
   reference for readable and writable Sphere-specific functionality.
 - [Local service](guides/local-service.md) documents the daemon, API,
   client, installation, and operational checks.
+- [Desktop app](guides/desktop-app.md) covers installation and use of
+  the optional Qt/QML control application.
 
 ## Analysis
 
@@ -35,6 +37,8 @@
   vendor provisioning behavior.
 - `research/hardware/` covers the original Sphere, Sphere C hardware,
   USB, firmware artifacts, and OTA capture options.
+- `research/compatibility/original-sphere.md` gives the current
+  original-Sphere compatibility assessment and cautious trial process.
 - `research/mesh/` covers Bluetooth Mesh protocol and self-provisioning
   experiments.
 - `research/upstream/` covers `ha-bluetooth-mesh`, dependency choices,
