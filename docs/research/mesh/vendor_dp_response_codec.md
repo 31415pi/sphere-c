@@ -1,5 +1,11 @@
 # Tuya vendor DATA response codec
 
+Historical APK codec audit. Later authenticated queries and
+writes established live DATA behavior; current response filtering
+and retry policy differ from some proposed handling below. See
+[the current reference](../../../SPHERE-C-BT.md) and
+[timeout handling](effect_timeout_runtime_audit.md).
+
 ## Result
 
 For the non-TID Tuya vendor model used by Sphere C, the access
@@ -145,12 +151,12 @@ records. Its exact per-type grammar is:
 
 | Type | Byte | DATA value encoding |
 |---|---:|---|
-| raw | `00` | `length:u8 || length bytes` |
+| raw | `00` | `length:u8`, then length bytes |
 | bool | `01` | one byte |
 | value | `02` | four bytes, big-endian integer |
-| string | `03` | `length:u8 || length bytes` |
+| string | `03` | `length:u8`, then length bytes |
 | enum | `04` | one byte |
-| bitmap | `05` | `length:u8 || length bytes`; valid lengths 1, 2, 4 |
+| bitmap | `05` | `length:u8`, then length bytes; valid lengths 1, 2, 4 |
 
 The resulting general DATA layout is therefore:
 

@@ -1,5 +1,12 @@
 # Step 4 lighting codec audit
 
+Historical audit. As of 2026-10-04, local `access.py` implements
+the HSL/xyL codecs and correct CTL Temperature model constant;
+later trials validated the supported lighting models. See
+[the current reference](../../../SPHERE-C-BT.md) and
+[live validation](../../analysis/step4-live-validation.md).
+The original gap analysis below describes its earlier baseline.
+
 ## Scope and source identity
 
 Step 4 needs acknowledged Get/Set/Status support for Light

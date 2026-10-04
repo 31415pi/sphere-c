@@ -9,6 +9,13 @@ activation flow, partial-failure recovery, diagnostics, QML interface,
 desktop metadata, original icon, and offline tests. Countdown, music,
 host-side animation, and service management remain deferred features.
 
+For the 2026-10-04 state, use the
+[desktop guide](../guides/desktop-app.md) and
+[protocol reference](../../SPHERE-C-BT.md). They distinguish
+implemented controls from the original proposals below, record
+Aurora and Red Flash motion evidence, and retain preview media,
+startup-mode inference and packaging as follow-up work.
+
 ## Goal
 
 Build a polished Linux desktop client in the general spirit of the

@@ -5,6 +5,10 @@ the local Sphere service. It never opens Bluetooth or reads the Mesh
 state file. `sphere-meshd` remains the sole owner of the radio session,
 keys, sequence cursor, and command serialization.
 
+The [project report](../../REPORT.md) explains the investigation;
+the [Bluetooth reference](../../SPHERE-C-BT.md) documents the
+protocol and evidence behind these controls.
+
 ## Install and launch
 
 Install the project with its optional Qt dependency:
@@ -91,6 +95,12 @@ source establishes the brightness write pattern, though the firmware's
 visual response to an HSL update during a flash effect is not yet
 proven.
 
+The 2026-10-04 authenticated read-only wake check again omitted
+DP 2. See [the recorded values][wake-check]; readable DP 102
+still did not establish active work mode.
+
+[wake-check]: ../../SPHERE-C-BT.md#fresh-read-only-wake-check
+
 The illustrated Sphere uses a lighter visual brightness range than
 the device command so dark settings remain easy to see on screen.
 Its hue and saturation still follow the selected color.
@@ -101,9 +111,11 @@ conversion in both directions and renders its preview from HSV. It does
 not treat HSV brightness as mathematical HSL lightness.
 
 The **Effects** view loads the catalog from the daemon and presents the
-25 built-in presets from the saved phone panel. Some are static patterns
-and some are animations; captures will be used to classify and preview
-them. Selecting a tile uses `effect.activate`: colour mode first, then
+25 built-in presets from the saved phone panel. Aurora and Red
+Flash have observed motion; the other 23 grid entries remain
+unclassified. User-recorded captures will establish Patterns and
+Animations and supply previews after media licensing is settled.
+Selecting a tile uses `effect.activate`: colour mode first, then
 the chosen effect.
 The client
 never repeats the whole activation automatically. The daemon waits for

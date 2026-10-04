@@ -4,7 +4,9 @@ This is the living, reader-oriented summary of the Sphere C's
 Tuya/Olight datapoints. Update it whenever a live read, controlled
 write, APK trace, or product-schema discovery changes the evidence.
 
-Last updated: 2026-09-27.
+Last updated: 2026-10-04. The consolidated
+[Bluetooth reference](../../SPHERE-C-BT.md) includes byte layouts,
+all schema preset values and the latest read-only wake check.
 
 The detailed evidence ledger is
 [the vendor-DP inventory](../research/mesh/vendor_dp_inventory.md).
@@ -17,10 +19,10 @@ mini-app. Executable code reversed from the Olight APK establishes the
 wire codec and routing behavior. Authenticated queries against the
 locally owned Sphere establish the smaller live-read set.
 
-DP 102 selection has been written and restored on the locally owned
-Sphere. Other write encodings below remain derived from
-product-specific UI call sites and the APK encoder rather than
-live-confirmed behavior.
+DP 102 selection/restoration, sequential DP 2 colour-mode
+activation, and a neutral DP 101 zero write have live evidence.
+Other write paths below remain panel/APK-derived unless explicitly
+marked as tested.
 
 Use these evidence labels when updating this page:
 
@@ -48,10 +50,10 @@ dp_id:u8 || dp_type:u8 || encoded_value
 
 | Type | Byte | Encoding |
 |---|---:|---|
-| Raw | `00` | `length:u8 || bytes` |
+| Raw | `00` | `length:u8`, then bytes |
 | Boolean | `01` | one byte |
 | Value | `02` | four-byte big-endian integer |
-| String | `03` | `length:u8 || UTF-8 bytes` |
+| String | `03` | `length:u8`, then UTF-8 bytes |
 | Enum | `04` | one byte |
 | Bitmap | `05` | length 1, 2, or 4 plus bytes |
 
@@ -138,9 +140,11 @@ and then DP 102, matching the individual-device panel order. Only
 visible picker values are writable. The 26 visible effects have unique
 slugs; canonical schema names such as `colour_2` also work. Catalog
 and current-effect responses contain `slug` and `canonical` metadata.
-Hidden schema values have no slug. Each write expects DATA and is
-sent once, without automatic retries. An empty DATA acknowledgment
-counts as a transport acknowledgment, not proof of a visible change.
+Hidden schema values have no slug. Each write expects DATA.
+Selection alone sends once. Activation writes DP 2 once, waits
+250 ms, then writes DP 102; only a DP 102 response timeout permits
+one repeat of that selection. The full activation is not retried.
+An empty DATA acknowledgment is not proof of a visible change.
 DP 102 writes are live-validated. A same-value write of Color Wheel
 (`07`) was acknowledged, Aurora (`02`) was selected and read back, and
 Color Wheel was restored and read back. A later live activation was
@@ -176,9 +180,12 @@ live-tested and read back as canonical `colour_2`.
 | 30 | `candy-cane` | Candy Cane |
 | 31 | `snowfall` | Snowfall |
 
-Only Aurora has been visually checked so far. The names and values for
-the other entries come from the saved product picker, and their host
-encoding is covered by the offline test suite.
+Aurora and Red Flash have direct motion observations. The other
+23 desktop-grid presets remain unclassified; names and values
+come from the saved picker, with offline encoding coverage.
+Color Wheel is a separate solid-color interaction, leaving 25
+grid entries from the 26 panel choices. See the
+[motion evidence](../research/app/effect_motion_classification.md).
 
 ### Music mode
 

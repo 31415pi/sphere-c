@@ -30,7 +30,7 @@ that the controller lost power.
 
 The authoritative composition identifies the device as:
 
-- company ID `0x07d0` (Olight)
+- company ID `0x07d0` (Tuya namespace used by Olight)
 - product ID `0x0200`
 - version ID `0x3530`
 - six elements
@@ -167,4 +167,6 @@ handoff.
 - Segmented unicast responses are assembled and acknowledged by the
   pinned `btmesh` dependency. Reliable retransmission of missing
   outbound segments is not implemented.
-- IV Index recovery and a receive replay cache are not implemented.
+- IV Index recovery and durable receive replay protection are not
+  implemented. Immediate-duplicate suppression in the dependency
+  is not a standards-complete Replay Protection List.

@@ -6,6 +6,12 @@ USB-C Olight Sphere C. It contains capture-analysis tools, a working
 Bluetooth Mesh provisioner, a persistent Linux control daemon, and an
 optional desktop client.
 
+Read [the project report](REPORT.md) for the investigation story
+and [the Bluetooth protocol reference](SPHERE-C-BT.md) for message
+layouts, datapoints, preset tables and evidence boundaries.
+The [status summary](STATUS.md) and [completed plan](PLAN.md)
+record the latest validation and remaining pre-firmware work.
+
 The original magnetic-charge Sphere is treated as a separate, untested
 device. The Mesh transport and standard lighting controls may work if
 its advertised services and composition match, but the current effect,

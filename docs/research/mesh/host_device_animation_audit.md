@@ -1,5 +1,10 @@
 # Sphere C device-side animation / vendor-command audit
 
+Historical audit with later experiment additions. Its host-code
+gap and proposed first vendor experiment have since been closed.
+See [the current reference](../../../SPHERE-C-BT.md) for the
+implemented vendor API, live evidence and remaining unknowns.
+
 ## Scope and conclusion
 
 This is a read-only audit of the locally saved Olight APK, its

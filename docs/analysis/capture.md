@@ -1,5 +1,11 @@
 # Sphere C capture analysis
 
+This is the original app-network capture analysis. Later local
+provisioning and authenticated control did not decrypt that old
+network's traffic. Its proposed next experiments are historical;
+see [the report](../../REPORT.md) and
+[current reference](../../SPHERE-C-BT.md) for subsequent results.
+
 ## Scope and provenance
 
 `TASK.md` was not present in this directory. `docs/project/original-task.md` was

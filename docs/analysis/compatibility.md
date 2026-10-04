@@ -1,5 +1,12 @@
 # Original Sphere and Sphere C compatibility
 
+Historical capture/public-profile comparison. The generic DP
+mapping below is not the later authenticated Sphere C inventory:
+product DP 7 is countdown, DP 8 music, DP 102 the preset selector,
+and DP 4 is absent from the saved product schema. Use the
+[current Bluetooth reference](../../SPHERE-C-BT.md) for exact
+Sphere C mappings; original-Sphere compatibility remains untested.
+
 ## Result
 
 The evidence supports treating Sphere C as probably belonging to the

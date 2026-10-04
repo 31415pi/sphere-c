@@ -18,8 +18,10 @@ of evidence that must not be treated as interchangeable:
 "Read evidence" means evidence that a value was actually reported, or
 weaker evidence that a schema permits reading. "Write evidence" means a
 product call site or observed transaction, not merely `mode: "rw"`.
-DP 102 now has a live acknowledged write, separate readback, and
-restoration. Other Sphere DP writes are not live-confirmed.
+DP 102 has live acknowledged writes, readback and restoration.
+DP 2 colour-mode activation and DP 101 zero also have live write
+evidence, as recorded in their rows below. For the current
+consolidation, see [SPHERE-C-BT.md](../../../SPHERE-C-BT.md).
 
 The product schema is embedded in the one-line mini-app bundle [S1]. It
 contains 17 entries. DP 4 is retained below as a separately identified

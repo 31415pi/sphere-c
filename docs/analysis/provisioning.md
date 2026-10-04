@@ -1,5 +1,11 @@
 # Sphere C key provisioning
 
+Historical app/protocol analysis. The physical local-provisioning
+path was subsequently exercised successfully; see the
+[runbook](../guides/self-provisioning.md) and
+[current reference](../../SPHERE-C-BT.md). Statements below about
+what the initial phone capture could prove retain that scope.
+
 ## Short answer
 
 Bluetooth Mesh does not require a factory-installed private key.

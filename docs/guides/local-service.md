@@ -82,8 +82,8 @@ Successful responses contain `ok: true` and `result`. Failures contain
 |---|---|
 | `health` | `{}` |
 | `status` | `{}` |
-| `control` | `{"command":"read|on|off|toggle"}` |
-| `lighting` | `{"command":"lightness|temperature|hsl|xyl..."}` |
+| `control` | `{"command":"read\|on\|off\|toggle"}` |
+| `lighting` | `{"command":"lightness\|temperature\|hsl\|xyl..."}` |
 | `vendor.read` | `{"dp_ids":[2,102]}` |
 | `effect.list` | `{}` |
 | `effect.get` | `{}` |
@@ -147,8 +147,11 @@ Writes accept a visible slug (for example, `aurora`, `color-wheel`,
 example, `colour_2`). The six hidden schema values cannot be written.
 Write responses
 may contain only an empty DATA acknowledgment, which confirms receipt
-but not the resulting appearance. No automatic retransmission is used
-for writes. These effect bytes are derived from the saved app and
+but not the resulting appearance. Ordinary vendor writes disable
+the node's automatic retries. During activation, the daemon waits
+250 ms after DP 2 and may retry only DP 102 once after a response
+timeout. Selection alone and countdown writes are not retried.
+These effect bytes are derived from the saved app and
 are now validated for DP 102: a live experiment selected Aurora,
 read it back, and restored Color Wheel. Live activation and visible
 output have since been confirmed.

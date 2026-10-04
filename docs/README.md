@@ -1,5 +1,13 @@
 # Documentation
 
+- [Project report](../REPORT.md): the local-control investigation
+  as a blog report.
+- [Sphere C Bluetooth reference](../SPHERE-C-BT.md): consolidated
+  protocol tables, current behavior and evidence limits.
+- [Project status](../STATUS.md): current checkpoint and priorities.
+- [Pre-firmware plan](../PLAN.md): completed documentation work and
+  remaining video/phone dependencies.
+
 ## Guides
 
 - [Self-provisioning](guides/self-provisioning.md) records the proven
@@ -32,6 +40,8 @@
   and phased scope for the now-implemented desktop client.
 - [Project continuation handoff](plans/continuation.md) summarizes the
   current status, safety rules, and next milestones for future work.
+- [Firmware capture preparation](research/hardware/original_sphere_ota_capture_plan.md)
+  provides the exact-device checklist and private artifact manifest.
 
 ## Research
 

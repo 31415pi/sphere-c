@@ -1,5 +1,14 @@
 # Olight Sphere firmware and update artifact research
 
+Historical artifact search: absence of an image applies to the
+inputs inspected here. The later
+[GATT fingerprint audit](original_sphere_chip_inference.md)
+provides stronger Telink-lineage evidence, still without an exact
+MCU identification. Use the
+[OTA capture plan](original_sphere_ota_capture_plan.md) for the
+current acquisition preparation; do not interrupt an update to
+test a chip hypothesis.
+
 ## Executive result
 
 No Olight Sphere or Sphere C firmware image is bundled in the

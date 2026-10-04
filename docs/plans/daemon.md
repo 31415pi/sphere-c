@@ -4,6 +4,15 @@ The goal is a reliable, locally controlled Linux service for a
 self-provisioned Sphere C. Work proceeds in six independently testable
 stages.
 
+Status, 2026-10-04: the daemon and guarded vendor API are
+implemented. This document preserves their staged design and
+historical trials; use [the service guide][service] and
+[protocol reference][protocol] for current behavior and remaining
+replay, IV Update and segmented-transmission limits.
+
+[service]: ../guides/local-service.md
+[protocol]: ../../SPHERE-C-BT.md
+
 ## 1. Reusable mesh transport
 
 Extract the proven local-Bluetooth, GATT-session, retry, and cleanup
@@ -66,8 +75,10 @@ used by vendor server `0x07d0:0x0004`, including strict typed response
 parsing. A read-only service operation can query selected datapoints
 without changing the lamp. Guarded named effect operations permit only
 visible DP 102 values; an explicit activation operation writes DP 2 and
-DP 102 sequentially. Writes are acknowledged and never retried
-automatically.
+DP 102 sequentially. Vendor writes require an acknowledgment
+and disable node-level automatic retries. Current activation may
+retry only DP 102 once after a response timeout; DP 2, standalone
+selection and countdown writes are not automatically retried.
 
 Live reads confirmed the grammar and exposed a two-part response: a
 short empty DATA acknowledgment followed by a segmented status
@@ -93,8 +104,10 @@ checks and acknowledged writes. A neutral DP 101=`0` write was echoed
 and independently read back without changing the powered-on state;
 positive durations remain untested. DPs 33, 37, and 38 have opaque
 payloads; DPs 104, 105, and 107 have behavior-unknown flags; and DP
-106 is a factory-lighting action. Those remain blocked. DP 7 is an
-unused countdown duplicate and is not exposed.
+106 is a factory-lighting action. Those writes remain blocked;
+DP 104 does have live read evidence. DP 7 is a separate schema
+countdown with observed zero reads, but no dedicated local write
+operation or proven alias relationship to DP 101.
 
 Vendor model `0x07d0:0x0005` is Tuya's client model. The official app
 binds and addresses only server `0x0004`; no saved artifact identifies

@@ -79,3 +79,31 @@ observations:
   an acknowledged vendor DP write. No automatic write retry was made.
   Structured error details now identify whether the mode write or
   effect write lacked a reply.
+
+## Documentation and wake checkpoint: 2026-10-04
+
+The complete suite subsequently passed 235 tests in 12.91 seconds
+with Unix-socket access. This is a new full-suite result, not a
+replacement for the 195-test milestone recorded above.
+
+After the owner reported sleeping and waking the Sphere C,
+the project daemon was started with the existing provisioned
+state. Authenticated OnOff, Lightness, HSL, CTL Temperature and
+vendor reads succeeded. Power was on; the vendor snapshot
+reported Flame selected, battery 100%, both countdowns zero and
+sleep false. DP 2 was still omitted. Exact values and evidence
+limits are in [the fresh-check table][wake].
+
+No lighting Set, vendor Write, reset or provisioning was issued.
+The temporary daemon was stopped cleanly after the check. The
+test establishes reachability after the reported wake, not hard
+power-loss persistence or visual confirmation of the selected
+preset.
+
+Current source review also confirmed the narrower activation
+retry policy: only DP 102 may be repeated once after its response
+times out. The earlier GUI trial's no-retry description remains
+the historical behavior for that trial. See
+[the timeout audit](../research/mesh/effect_timeout_runtime_audit.md).
+
+[wake]: ../../SPHERE-C-BT.md#fresh-read-only-wake-check

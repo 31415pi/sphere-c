@@ -1,5 +1,14 @@
 # Stage 2 Bluetooth Mesh protocol risks
 
+Historical pre-daemon audit. The 2026-10-04 review confirms that
+sequence/TID reservation, fsync, exclusive ownership, fresh scans
+and Node Identity checks now exist. Durable replay protection,
+IV Update/recovery and reliable outbound segment retransmission
+remain incomplete. Incoming unicast segments are acknowledged.
+See [the current reference](../../../SPHERE-C-BT.md) before
+treating a gap or proposed launch requirement below as current
+implementation behavior.
+
 ## Scope and source baseline
 
 This audit covers the requirements that should be settled before

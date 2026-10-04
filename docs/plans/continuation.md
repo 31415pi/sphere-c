@@ -1,6 +1,6 @@
 # Project continuation handoff
 
-Last reviewed: 2026-09-27. This is a restart guide for a future
+Last reviewed: 2026-10-04. This is a restart guide for a future
 coding agent. It summarizes the checked-in project and its recorded
 hardware evidence; it is not permission to perform live writes,
 reset a device, install a service, or publish changes.
@@ -26,12 +26,27 @@ activation; the service may retry only its idempotent effect-selection
 step once in the documented timeout case. These observations do not
 establish behavior on the original magnetic-charge Sphere.
 
-**Current checkout check:** The implementation baseline is `ae4241b`
-(`implemented desktop Sphere controls`); this handoff follows in a
-documentation-only commit. The complete suite passed on 2026-09-27:
-235 tests passed. The Qt and local-socket tests need an environment
+**Current checkpoint:** The code baseline reviewed is `c6043fc`,
+following desktop implementation at `ae4241b`. The pre-firmware
+report and reference are complete; no runtime changes were made.
+The complete suite passed on 2026-10-04: 235 tests in 12.91 seconds.
+The Qt and local-socket tests need an environment
 allowed to create Unix sockets; an ordinary restricted sandbox run can
 fail for that reason without a source regression.
+
+**Fresh device check:** After the owner's reported sleep/wake,
+authenticated reads on 2026-10-04 confirmed power on, Flame
+selected, battery 100%, both countdowns zero and sleep false.
+DP 2 remained absent. Lightness, HSL and CTL Temperature also
+answered. No lighting Set or vendor Write was issued. The
+temporary daemon was stopped; do not assume one is running now.
+
+Read [STATUS.md](../../STATUS.md) for the latest summary,
+[REPORT.md](../../REPORT.md) for the narrative, and
+[SPHERE-C-BT.md](../../SPHERE-C-BT.md) for consolidated tables and
+evidence. [PLAN.md](../../PLAN.md) records completed checks and
+the remaining phone/video dependencies. The owner has requested
+a local documentation commit, not a push or new live experiments.
 
 Treat documented hardware results as historical observations. Before
 any live operation, confirm device identity, daemon ownership, current
@@ -39,8 +54,9 @@ state freshness, and user intent. Never inspect or publish secrets.
 
 ## Re-reading inventory, in priority order
 
-1. `README.md` — current supported commands, setup, capability
-   boundaries, and sensitive paths. Start here.
+1. `STATUS.md`, `README.md`, `SPHERE-C-BT.md`, and `PLAN.md` —
+   current checkpoint, commands, consolidated protocol evidence
+   and remaining work. `REPORT.md` supplies the narrative.
 2. `docs/README.md` — documentation map and which pages are guides,
    evidence, or plans.
 3. `docs/plans/daemon.md` — completed stage boundaries and deferrals;
@@ -155,7 +171,8 @@ The README documents mutating commands; consult the guides before
 using them.
 
 The documented offline suite command is `./.venv/bin/pytest -q`.
-The last permitted full run passed all 235 tests. Rerun in an
+The 2026-10-04 full run passed all 235 tests in 12.91 seconds.
+Rerun after relevant changes in an
 environment that permits Unix socket creation before claiming a new
 suite status. Focused operational tests can be selected with
 `./.venv/bin/python -m pytest -q tests/test_operational.py`.
@@ -187,9 +204,11 @@ enabled. Do not install/enable it as part of ordinary source work.
   and persists a TID before use. Confirm intended transaction-window
   behavior and wrap handling before changing retries; reuse a TID only
   when retrying the same logical Set.
-- IV Index is fixed in the current session. A mismatched authenticated
-  beacon or unsupported IV Update must fail closed. Do not blindly
-  copy an advertised IV index into state.
+- IV Index is fixed in the current session. Runtime Proxy beacons
+  are ignored; network decoding rejects mismatched IVI or failed
+  authentication under that fixed index. Beacon-driven IV Update
+  detection/recovery is not implemented. Do not copy an advertised
+  IV index into state or describe recovery policy as implemented.
 - Node Identity advertisements are matched to the active NetKey and
   unicast address in current source. This is stronger than Network ID
   alone. The receive path still lacks a standards-complete persistent
@@ -223,16 +242,20 @@ enabled. Do not install/enable it as part of ordinary source work.
   GUI trial; later mode switching worked, so treat the failure as
   intermittent rather than proof that the preset is unsupported.
 - DP 101 zero has live acknowledgment/readback. Positive countdowns
-  and delayed off behavior are untested. DP 7 is a duplicate countdown
-  and is not exposed.
-- Opaque or behavior-unknown DPs remain unavailable: 33, 37, 38, 104,
-  105, 107; DP 106 is a factory-lighting action. DP 8 music requires
+  and delayed off behavior are untested. DP 7 is a separate schema
+  countdown with live zero reads, not a proven alias for DP 101;
+  it has no dedicated local write operation.
+- Opaque or behavior-unknown writes remain unavailable for DPs
+  33, 37, 38, 104, 105 and 107. DP 104 does have live read evidence.
+  DP 106 is a factory-lighting action. DP 8 music requires
   continuous streaming and is deferred. Vendor client model
   `0x07d0:0x0005` is not a control target.
 - Effect persistence over a true battery-off cycle is unknown. The
   documented button-off/wake cycle is not a verified hard power cycle.
 - Provisioning lacks PB-ADV, output/input OOB, reliable outbound
   segmented retransmission, full IV Update/recovery, and durable RPL.
+  Incoming segmented unicast messages are acknowledged/reassembled;
+  immediate-duplicate suppression is not durable replay protection.
   Node Identity matching and write-ahead sequence/TID persistence are
   present in current source. See the protocol risk audit for detail,
   while accounting for its older gap statements.
@@ -245,8 +268,8 @@ enabled. Do not install/enable it as part of ordinary source work.
 ## User priorities at pause
 
 The owner deliberately curtailed the project after the desktop app
-became usable. If work resumes, do not silently revive every deferred
-experiment.
+became usable, then requested the completed report/reference work.
+Do not silently revive every deferred experiment.
 
 - First product priority was the complete built-in preset library and
   useful previews in the GUI.
@@ -299,7 +322,8 @@ experiment.
 - Implement durable replay protection so stale Status cannot resolve
   a current request.
 - Implement IV Update/recovery or retain explicit operator recovery;
-  continue to fail closed on mismatch until supported.
+  design authenticated-beacon handling and retain rejection of
+  messages that cannot authenticate under the current state.
 - Add crash/failure injection at reserve, enqueue, send, reconnect,
   and restart boundaries. Test hard power-loss assumptions separately.
 
@@ -313,7 +337,8 @@ experiment.
   HiDPI validation called out in the original acceptance criteria.
 - Resolve per-user/distribution installation of `.desktop` entry and
   icon; editable installs put these under the virtual environment.
-- Reconcile docs around effect catalog size/labeling and confirm
+- Catalog counts are reconciled in `SPHERE-C-BT.md`: 32 schema
+  values, 26 panel choices and 25 desktop-grid entries. Confirm
   current UI behavior against source before extending it.
 - If the intermittent Cotton Candy timeout recurs, diagnose it through
   readback and structured logs. Do not infer state from acknowledgment
@@ -340,6 +365,17 @@ experiment.
   identity model. See `docs/research/architecture/multi-sphere-support.md`.
 - Upstream reusable fixes or Home Assistant integration are separate
   workstreams; inspect the upstream research inventory first.
+
+### Firmware acquisition preparation
+
+The [OTA capture plan][ota-plan] now has an exact-device checklist,
+private manifest template and ranked analysis questions. Runtime
+hooks and export validation still need a prepared phone and an
+agreed workflow. Do not consume the boxed original Sphere's
+possible update offer during tooling preparation. Any resulting
+original-Sphere image remains evidence for that generation.
+
+[ota-plan]: ../research/hardware/original_sphere_ota_capture_plan.md
 
 ## Suggested milestones
 

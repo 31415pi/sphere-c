@@ -1,5 +1,12 @@
 # Step 4 Sphere C standard-model map
 
+Historical model audit. The composition and mapping below remain
+useful, but its claims of no local lighting trials and outdated
+README/runbook wording predate the corrections and
+[live validation](../../analysis/step4-live-validation.md).
+See [the current reference](../../../SPHERE-C-BT.md) for the
+2026-10-04 implementation and evidence reconciliation.
+
 ## Result
 
 The captured Sphere C has three of the four candidate standard
