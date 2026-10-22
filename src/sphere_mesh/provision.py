@@ -171,6 +171,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="configure and inspect the node, but do not change the light state",
     )
     parser.add_argument(
+        "--probe-composition", action="store_true",
+        help="use saved Mesh credentials to request Composition Data before AppKey Add; "
+        "do not bind models or change the lamp",
+    )
+    parser.add_argument(
         "--reset-node", action="store_true",
         help="send a device-keyed Config Node Reset and perform no other action",
     )
@@ -209,6 +214,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         args.provision_only,
         args.toggle_only,
         args.reset_node,
+        args.probe_composition,
         args.control is not None,
         args.lighting is not None,
     )
@@ -566,6 +572,31 @@ async def _find_proxy_target(state: dict, transport, unicast: int):
     )
 
 
+async def probe_composition(node: MeshNode, unicast: int, pump: BearerPump) -> None:
+    """Diagnostic: an unsegmented, DevKey-encrypted request before AppKey Add.
+
+    The response may itself be segmented; failure to receive it is not proof
+    that the node rejected the request. This path never binds or changes models.
+    """
+    print("Diagnostic: Composition Data Get (page 0), no AppKey Add...")
+    try:
+        resp = await node.request(
+            unicast,
+            config_composition_data_get(0),
+            OP_CONFIG_COMPOSITION_DATA_STATUS,
+            dev_key=True,
+            timeout=15,
+            retries=1,
+        )
+    except TimeoutError as exc:
+        raise Phase0Failure(
+            "diagnostic Composition Data Get", str(exc), _timeout_causes(pump)
+        ) from exc
+    comp = parse_composition_data_status(_full_payload(resp))
+    print(f"  authenticated composition: {comp.describe()}")
+    print("Diagnostic PASS: DevKey-encrypted Mesh configuration round trip works.")
+
+
 async def configure(
     node: MeshNode, unicast: int, appkey: bytes, state: dict, pump: BearerPump
 ) -> None:
@@ -868,6 +899,9 @@ async def mesh_session(
     pump = session.pump
 
     try:
+        if args.probe_composition:
+            await probe_composition(node, unicast, pump)
+            return
         if args.reset_node:
             print("Config Node Reset (returning the Sphere to unprovisioned state)...")
             try:
@@ -1030,7 +1064,7 @@ async def async_main(args: argparse.Namespace) -> int:
         return 1
 
     try:
-        if args.toggle_only or args.reset_node or args.control or args.lighting:
+        if args.toggle_only or args.reset_node or args.probe_composition or args.control or args.lighting:
             unicast = pick_device(state, args)
             print(f"using device 0x{unicast:04x} from {state_path}")
         else:
