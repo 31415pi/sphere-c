@@ -390,6 +390,16 @@ async def open_mesh_proxy_session(
         def on_message(msg_type: int, payload: bytes) -> None:
             if msg_type == MSG_TYPE_NETWORK_PDU:
                 node.handle_network_pdu(payload)
+            elif msg_type == MSG_TYPE_PROXY_CONFIG:
+                # Proxy Filter Status opcode is 0x03; this is *not* a
+                # Configuration Model Status and does not reach MeshNode.
+                if len(payload) == 4 and payload[0] == 0x03:
+                    logger.info(
+                        "Proxy Filter Status: type=0x%02x list_size=%d",
+                        payload[1], int.from_bytes(payload[2:4], "big"),
+                    )
+                else:
+                    logger.warning("unexpected Proxy Configuration PDU: %s", payload.hex())
             else:
                 logger.debug(
                     "ignoring proxy message type 0x%02x: %s",
